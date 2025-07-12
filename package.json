@@ -1,0 +1,24 @@
+{
+  "name": "take_note",
+  "version": "1.0.0",
+  "description": "This is take note app.",
+  "repository": {
+    "type": "git",
+    "url": "ssh://git@git.trap.jp:2200/Suima/take_note.git"
+  },
+  "license": "MIT",
+  "author": "Suima",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "devDependencies": {
+    "electron": "^37.2.1"
+  },
+  "dependencies": {
+    "@vscode/markdown-it-katex": "^1.1.2",
+    "katex": "^0.16.22",
+    "markdown-it": "^14.1.0"
+  }
+}
