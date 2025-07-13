@@ -1,20 +1,35 @@
 <!DOCTYPE html>
 <html lang="ja">
-  <head>
-    <meta charset="UTF-8" />
-    <!-- https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP -->
-    <meta
-      http-equiv="Content-Security-Policy"
-      content="default-src 'self'; script-src 'self'"
-    />
-    <meta
-      http-equiv="X-Content-Security-Policy"
-      content="default-src 'self'; script-src 'self'"
-    />
-    <title>Hello from Electron renderer!</title>
-  </head>
-  <body>
-    <h1>Hello from Electron renderer!</h1>
-    <p>👋</p>
-  </body>
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self' https://cdn.jsdelivr.net 'unsafe-inline'; font-src 'self';">
+  <title>Take-note</title>
+  <link rel="stylesheet" href="./node_modules/katex/dist/katex.min.css">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="./node_modules/highlight.js/styles/default.css">
+</head>
+<body>
+  <div class="container">
+    <div id="sidebar" class="sidebar">
+      <!-- ここにファイルツリーが表示されます -->
+    </div>
+    <div class="main-content">
+      <textarea id="editor" class="editor-pane"></textarea>
+      <div id="preview" class="preview-pane"></div>
+    </div>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <script src="./renderer.js" defer></script>
+
+  <dialog id="inputModal" class="modal-dialog">
+    <div class="modal-content">
+      <h2 id="modalTitle"></h2>
+      <input type="text" id="modalInput" placeholder="ファイル名またはフォルダ名を入力...">
+      <div class="modal-buttons">
+        <button id="modalCancelButton">キャンセル</button>
+        <button id="modalConfirmButton">OK</button>
+      </div>
+    </div>
+  </dialog>
+</body>
 </html>
