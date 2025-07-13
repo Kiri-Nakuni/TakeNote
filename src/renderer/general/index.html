@@ -4,9 +4,9 @@
   <meta charset="UTF-8">
   <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self' https://cdn.jsdelivr.net 'unsafe-inline'; font-src 'self';">
   <title>Take-note</title>
-  <link rel="stylesheet" href="./node_modules/katex/dist/katex.min.css">
-  <link rel="stylesheet" href="style.css">
-  <link rel="stylesheet" href="./node_modules/highlight.js/styles/default.css">
+  <link rel="stylesheet" href="../../../node_modules/katex/dist/katex.min.css">
+  <link rel="stylesheet" href="../mode/note/style.css">
+  <link rel="stylesheet" href="../../../node_modules/highlight.js/styles/default.css">
 </head>
 <body>
   <div class="container">
@@ -26,8 +26,7 @@
       <div id="preview" class="preview-pane"></div>
     </div>
   </div>
-  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
-  <script src="./renderer.js" defer></script>
+  <script src="../../../dist/renderer/mode/note/renderer.js" defer></script>
 
   <dialog id="inputModal" class="modal-dialog">
     <div class="modal-content">

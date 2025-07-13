@@ -1,12 +1,10 @@
 // main.js
 
-const { app, BrowserWindow, ipcMain, dialog } = require('electron');
+const { app, ipcMain, dialog } = require('electron');
 const path = require('node:path');
 const fs = require('fs').promises;
 const AdmZip = require('adm-zip');
-
-// メインウィンドウのインスタンスを保持
-let win;
+const { createWindow, initializeWindowEvents } = require('./dist/components/UI/window.js');
 
 // グローバルなエラーログ配列
 const errorLogs = [];
@@ -37,29 +35,14 @@ process.on('unhandledRejection', (reason, promise) => {
   errorLogs.push(logEntry);
 });
 
-const createWindow = () => {
-  win = new BrowserWindow({
-    width: 1200,
-    height: 800,
-    webPreferences: {
-      preload: path.join(__dirname, 'preload.js'),
-      contextIsolation: true,
-      nodeIntegration: false,
-      sandbox: false
-    }
-  });
-
-  win.loadFile('index.html');
-  // win.webContents.openDevTools(); // 開発者ツールをデフォルトで開かないようにする
-};
-
 app.whenReady().then(() => {
+  initializeWindowEvents(); // ウィンドウ関連のイベントを初期化
   createWindow();
 
   app.on('activate', () => {
-    if (BrowserWindow.getAllWindows().length === 0) {
-      createWindow();
-    }
+    // macOSでDockアイコンがクリックされたときの処理
+    // createWindowは内部でインスタンスの存在をチェックするため、そのまま呼び出してOK
+    createWindow();
   });
 });
 
@@ -70,20 +53,6 @@ app.on('window-all-closed', () => {
 });
 
 // --- IPC Handlers ---
-
-// ウィンドウタイトルを更新
-ipcMain.on('update-title', (event, filePath) => {
-  if (win) {
-    if (filePath) {
-      // .html拡張子を削除し、パスを整形
-      const titlePath = filePath.replace(/\.html$/, '');
-      win.setTitle(`take_note - ${titlePath}`);
-    } else {
-      // ファイルが開かれていない場合（新規ノートなど）
-      win.setTitle('take_note - New Note');
-    }
-  }
-});
 
 // レンダラープロセスからのエラーを記録
 ipcMain.on('log-error', (event, error) => {
@@ -206,8 +175,13 @@ ipcMain.handle('write-file', async (event, fileName, content) => {
 
     // 新しいZIPアーカイブを作成
     const zip = new AdmZip();
-    // コンテンツを 'index.html' としてZIPに追加
+    // ノートのコンテンツを 'index.html' としてZIPに追加
     zip.addFile('index.html', Buffer.from(content, 'utf-8'));
+
+    // メタデータファイル .meta を作成してZIPに追加
+    const metaData = { mode: 'note' };
+    zip.addFile('.meta', Buffer.from(JSON.stringify(metaData), 'utf-8'));
+
     // バッファをディスクに書き込む
     await fs.writeFile(filePath, zip.toBuffer());
     return { success: true };

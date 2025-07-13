@@ -1,6 +1,6 @@
 {
   "name": "take_note",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "This is take note app.",
   "repository": {
     "type": "git",
@@ -10,11 +10,15 @@
   "author": "Suima",
   "main": "main.js",
   "scripts": {
-    "start": "electron .",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "tsc",
+    "prestart": "npm run build",
+    "start": "electron ."
   },
   "devDependencies": {
-    "electron": "^37.2.1"
+    "@types/katex": "^0.16.7",
+    "@types/markdown-it": "^14.1.2",
+    "electron": "^37.2.1",
+    "typescript": "^5.5.3"
   },
   "dependencies": {
     "adm-zip": "^0.5.14",
