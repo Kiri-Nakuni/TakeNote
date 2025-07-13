@@ -1,6 +1,6 @@
 {
   "name": "take_note",
-  "version": "0.0.2",
+  "version": "0.1.0",
   "description": "This is take note app.",
   "repository": {
     "type": "git",
@@ -17,9 +17,10 @@
     "electron": "^37.2.1"
   },
   "dependencies": {
-    "@vscode/markdown-it-katex": "^1.1.2",
+    "adm-zip": "^0.5.14",
     "highlight.js": "^11.11.1",
     "katex": "^0.16.22",
-    "markdown-it": "^13.0.2"
+    "markdown-it": "^13.0.2",
+    "markdown-it-texmath": "^1.0.0"
   }
 }

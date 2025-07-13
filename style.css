@@ -1,9 +1,27 @@
+/* テーマ変数を定義 */
+:root {
+  --font-family-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-family-mono: "Courier New", Courier, "Lucida Console", Monaco, monospace;
+
+  --bg-color: #ffffff;
+  --text-color: #212529;
+  --sidebar-bg: #f0f0f0;
+  --border-color: #ccc;
+  --primary-color: #007bff;
+  --primary-color-hover: #0056b3;
+  --primary-text-color: #ffffff;
+  --hover-bg-color: #e2e2e2;
+  --modal-bg: #ffffff;
+  --modal-shadow: rgba(0, 0, 0, 0.1);
+  --modal-backdrop: rgba(0, 0, 0, 0.5);
+}
+
 /* 全体のレイアウト */
 body, html {
   margin: 0;
   padding: 0;
   height: 100%;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  font-family: var(--font-family-sans);
   overflow: hidden; /* スクロールバーをコンテナ内で管理 */
 }
 
@@ -15,10 +33,30 @@ body, html {
 .sidebar {
   width: 250px;
   min-width: 200px;
-  background-color: #f0f0f0;
+  background-color: var(--sidebar-bg);
+  overflow-y: hidden; /* スクロールはcontentで行う */
+  border-right: 1px solid var(--border-color);
+  display: flex; /* flexレイアウトに変更 */
+  flex-direction: column; /* 縦方向に配置 */
+}
+
+#sidebar-content {
   padding: 10px;
-  overflow-y: auto;
-  border-right: 1px solid #ccc;
+  overflow-y: auto; /* こちらでスクロールを有効にする */
+  flex-grow: 1; /* 残りのスペースをすべて使う */
+}
+
+.sidebar-footer {
+  padding: 10px;
+  border-top: 1px solid var(--border-color);
+  flex-shrink: 0; /* 縮まないようにする */
+}
+
+.mode-switch {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  user-select: none;
 }
 
 .main-content {
@@ -40,8 +78,8 @@ body, html {
 
 .editor-pane {
   resize: none;
-  border-right: 1px solid #ccc;
-  font-family: "Courier New", Courier, "Lucida Console", Monaco, monospace;
+  border-right: 1px solid var(--border-color);
+  font-family: var(--font-family-mono);
 }
 
 .editor-pane:focus {
@@ -54,8 +92,8 @@ body, html {
   width: 100%;
   padding: 8px 12px;
   margin-bottom: 8px;
-  background-color: #007bff;
-  color: white;
+  background-color: var(--primary-color);
+  color: var(--primary-text-color);
   border: none;
   border-radius: 4px;
   cursor: pointer;
@@ -63,7 +101,7 @@ body, html {
 }
 
 .sidebar button:hover {
-  background-color: #0056b3;
+  background-color: var(--primary-color-hover);
 }
 
 /* ファイルツリー */
@@ -92,12 +130,12 @@ body, html {
 }
 
 .sidebar-item:hover {
-  background-color: #e2e2e2;
+  background-color: var(--hover-bg-color);
 }
 
 .sidebar-item.active-file {
-  background-color: #007bff;
-  color: white;
+  background-color: var(--primary-color);
+  color: var(--primary-text-color);
 }
 
 /* KaTeXエラー用スタイル */
@@ -106,17 +144,38 @@ body, html {
   font-weight: bold;
 }
 
+/* KaTeXの\html...コマンドで生成されるspanをスタイリング */
+.enclosing {
+}
+/* KaTeX内のHTMLをスケーリングするためのカスタムクラス */
+.scale-me {
+  display: inline-block; /* transformを適用するために必要 */
+  transform: scale(1.2); /* デフォルトで1.2倍に拡大 */
+  transition: transform 0.2s ease-in-out;
+  transform-origin: center;
+}
+
+.scale-me:hover {
+  transform: scale(1.5); /* ホバー時にさらに拡大 */
+}
+
+.reflectbox {
+  transform: scaleX(-1);
+  display: inline-block;
+}
+
 /* モーダルダイアログ */
 .modal-dialog {
   padding: 1.5em;
-  border: 1px solid #ccc;
+  border: 1px solid var(--border-color);
   border-radius: 8px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 10px var(--modal-shadow);
   min-width: 400px;
+  background-color: var(--modal-bg);
 }
 
 .modal-dialog::backdrop {
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: var(--modal-backdrop);
 }
 
 .modal-content h2 {
@@ -130,7 +189,7 @@ body, html {
   padding: 8px;
   margin-bottom: 1.5em;
   box-sizing: border-box;
-  border: 1px solid #ccc;
+  border: 1px solid var(--border-color);
   border-radius: 4px;
 }
 
@@ -148,6 +207,23 @@ body, html {
 }
 
 .modal-buttons #modalCancelButton {
-  background-color: #f0f0f0;
-  color: #333;
+  background-color: var(--hover-bg-color);
+  color: var(--text-color);
+}
+
+/* --- View Mode Styles --- */
+
+/* Viewモードではエディタを非表示 */
+body.view-mode .editor-pane {
+  display: none;
+}
+
+/* Viewモードではプレビューを全幅表示 */
+body.view-mode .preview-pane {
+  width: 100%;
+}
+
+/* Viewモードでは編集系のボタンを非表示 */
+body.view-mode .edit-mode-button {
+  display: none;
 }

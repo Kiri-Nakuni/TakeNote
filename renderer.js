@@ -23,7 +23,7 @@ window.addEventListener('unhandledrejection', (event) => {
 window.addEventListener('DOMContentLoaded', async () => {
   const editor = document.getElementById('editor');
   const preview = document.getElementById('preview');
-  const sidebar = document.getElementById('sidebar');
+  const sidebarContent = document.getElementById('sidebar-content');
 
   // モーダル関連のDOM要素
   const inputModal = document.getElementById('inputModal');
@@ -31,6 +31,12 @@ window.addEventListener('DOMContentLoaded', async () => {
   const modalInput = document.getElementById('modalInput');
   const modalConfirmButton = document.getElementById('modalConfirmButton');
   const modalCancelButton = document.getElementById('modalCancelButton');
+  const modeSwitchCheckbox = document.getElementById('mode-switch-checkbox');
+
+  // モード切り替えスイッチのイベントリスナー
+  modeSwitchCheckbox.addEventListener('change', (event) => {
+    document.body.classList.toggle('view-mode', event.target.checked);
+  });
 
   // モーダルを表示する関数
   const showInputModal = (title, placeholder = '') => {
@@ -38,25 +44,34 @@ window.addEventListener('DOMContentLoaded', async () => {
     modalInput.value = '';
     modalInput.placeholder = placeholder;
     inputModal.showModal();
-    modalInput.focus();
+    // setTimeoutを使用して、現在のイベントループが完了し、ダイアログが
+    // フォーカスを受け入れられる状態になってからフォーカスを当てます。
+    setTimeout(() => {
+      modalInput.focus();
+    }, 0);
 
     return new Promise(resolve => {
-      const closeHandler = () => {
-        // ダイアログが閉じられたときに、その結果を解決する
-        resolve(inputModal.returnValue);
-        // イベントリスナーをクリーンアップ
+      let result = null; // デフォルトはキャンセル(null)
+
+      const cleanup = () => {
         modalConfirmButton.removeEventListener('click', confirmHandler);
         modalCancelButton.removeEventListener('click', cancelHandler);
         inputModal.removeEventListener('close', closeHandler);
       };
 
       const confirmHandler = () => {
-        // closeメソッドに渡した値がreturnValueになる
-        inputModal.close(modalInput.value);
+        result = modalInput.value;
+        inputModal.close(); // これで 'close' イベントが発火する
       };
 
       const cancelHandler = () => {
-        inputModal.close(null); // キャンセルの場合はnull
+        result = null;
+        inputModal.close(); // これで 'close' イベントが発火する
+      };
+
+      const closeHandler = () => {
+        cleanup();
+        resolve(result);
       };
 
       modalConfirmButton.addEventListener('click', confirmHandler);
@@ -84,6 +99,18 @@ window.addEventListener('DOMContentLoaded', async () => {
       const htmlResult = window.markdown.render(markdown);
       preview.innerHTML = htmlResult;
 
+      // KaTeXの\htmlDataで付与された属性に基づいて動的にスケーリングを適用
+      const elementsWithScale = preview.querySelectorAll('span[data-xscale], span[data-yscale]');
+      elementsWithScale.forEach(el => {
+        const xScale = el.dataset.xscale || 1;
+        const yScale = el.dataset.yscale || 1;
+        // transformを適用するには、displayがinline-blockまたはblockである必要がある
+        el.style.display = 'inline-block';
+        el.style.transformOrigin = 'center';
+        el.style.transform = `scale(${xScale}, ${yScale})`;
+      });
+
+      // Mermaid.jsのグラフをレンダリング
       const mermaidElements = preview.querySelectorAll('code.language-mermaid');
       for (let i = 0; i < mermaidElements.length; i++) {
         const element = mermaidElements[i];
@@ -143,6 +170,7 @@ window.addEventListener('DOMContentLoaded', async () => {
         await render(content);
         const fileElement = document.querySelector(`.sidebar-item[data-path="${fileName}"]`);
         highlightSidebarItem(fileElement);
+        window.appUtils.updateTitle(fileName);
         editor.focus(); // フォーカスを当てる
       } else {
         editor.value = '';
@@ -163,14 +191,14 @@ window.addEventListener('DOMContentLoaded', async () => {
 
     if (!fileNameToSave) {
       // 新規ファイルの場合、ファイル名をユーザーに入力させる
-      fileNameToSave = await showInputModal('新しいノートのファイル名を入力してください', 'my_note.html');
+      fileNameToSave = await showInputModal('新しいノートのファイル名を入力してください', 'my_note.tan');
       if (!fileNameToSave) {
-        alert('ファイル名が入力されませんでした。保存をキャンセルします。');
+        // モーダルがキャンセルされた場合は何もしない
         return;
       }
-      // 拡張子がない場合、.html を追加
-      if (!fileNameToSave.endsWith('.html')) {
-        fileNameToSave += '.html';
+      // 拡張子がない場合、.tan を追加
+      if (!fileNameToSave.endsWith('.tan')) {
+        fileNameToSave += '.tan';
       }
     }
 
@@ -179,6 +207,7 @@ window.addEventListener('DOMContentLoaded', async () => {
       if (result.success) {
         alert(`'${fileNameToSave}' を保存しました。`);
         currentFile = fileNameToSave; // 新規保存の場合、currentFileを更新
+        window.appUtils.updateTitle(currentFile);
         await loadFilesIntoSidebar(); // サイドバーを再描画
         // 保存後に新しいファイルをハイライト
         const fileElement = document.querySelector(`.sidebar-item[data-path="${fileNameToSave}"]`);
@@ -196,6 +225,12 @@ window.addEventListener('DOMContentLoaded', async () => {
     editor.value = `# 新しいノート\n\nここに内容を記述してください。`;
     preview.innerHTML = '';
     currentFile = null; // 新規ノートなので、現在のファイルはなし
+    window.appUtils.updateTitle(null);
+    // ViewモードだったらEditモードに戻す
+    if (document.body.classList.contains('view-mode')) {
+      modeSwitchCheckbox.checked = false;
+      document.body.classList.remove('view-mode');
+    }
     highlightSidebarItem(null); // ハイライトを解除
     editor.focus(); // フォーカスを当てる
   };
@@ -203,7 +238,7 @@ window.addEventListener('DOMContentLoaded', async () => {
   const createNewFolder = async () => {
     const folderName = await showInputModal('新しいフォルダ名を入力してください', 'my_folder');
     if (!folderName) {
-      alert('フォルダ名が入力されませんでした。作成をキャンセルします。');
+      // モーダルがキャンセルされた場合は何もしない
       return;
     }
     try {
@@ -265,31 +300,33 @@ window.addEventListener('DOMContentLoaded', async () => {
   };
 
   const loadFilesIntoSidebar = async () => {
-    if (sidebar) {
-      sidebar.innerHTML = ''; // サイドバーをクリア
+    if (sidebarContent) {
+      sidebarContent.innerHTML = ''; // サイドバーの動的コンテンツをクリア
 
       // 新規ノート作成ボタン
       const newNoteButton = document.createElement('button');
       newNoteButton.textContent = '新しいノート';
+      newNoteButton.className = 'edit-mode-button';
       newNoteButton.onclick = createNewNote;
-      sidebar.appendChild(newNoteButton);
+      sidebarContent.appendChild(newNoteButton);
 
       // 新しいフォルダ作成ボタン
       const newFolderButton = document.createElement('button');
       newFolderButton.textContent = '新しいフォルダ';
+      newFolderButton.className = 'edit-mode-button';
       newFolderButton.onclick = createNewFolder;
-      sidebar.appendChild(newFolderButton);
+      sidebarContent.appendChild(newFolderButton);
 
       // 保存ボタン
       const saveButton = document.createElement('button');
       saveButton.textContent = '保存';
+      saveButton.className = 'edit-mode-button';
       saveButton.onclick = saveFile;
-      sidebar.appendChild(saveButton);
+      sidebarContent.appendChild(saveButton);
 
       // エラーログ出力ボタン
       const exportLogsButton = document.createElement('button');
       exportLogsButton.textContent = 'エラーログ出力';
-      exportLogsButton.style.marginTop = '10px'; // 見た目のためのマージン
       exportLogsButton.onclick = async () => {
         try {
           const result = await window.appUtils.exportLogs();
@@ -302,11 +339,11 @@ window.addEventListener('DOMContentLoaded', async () => {
           alert('ログのエクスポート処理を呼び出せませんでした。');
         }
       };
-      sidebar.appendChild(exportLogsButton);
+      sidebarContent.appendChild(exportLogsButton);
 
       const treeContainer = document.createElement('div');
       treeContainer.id = 'file-tree-container';
-      sidebar.appendChild(treeContainer);
+      sidebarContent.appendChild(treeContainer);
 
       await createTree(treeContainer);
 

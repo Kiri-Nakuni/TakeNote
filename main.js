@@ -3,6 +3,10 @@
 const { app, BrowserWindow, ipcMain, dialog } = require('electron');
 const path = require('node:path');
 const fs = require('fs').promises;
+const AdmZip = require('adm-zip');
+
+// メインウィンドウのインスタンスを保持
+let win;
 
 // グローバルなエラーログ配列
 const errorLogs = [];
@@ -34,7 +38,7 @@ process.on('unhandledRejection', (reason, promise) => {
 });
 
 const createWindow = () => {
-  const win = new BrowserWindow({
+  win = new BrowserWindow({
     width: 1200,
     height: 800,
     webPreferences: {
@@ -46,7 +50,7 @@ const createWindow = () => {
   });
 
   win.loadFile('index.html');
-  win.webContents.openDevTools();
+  // win.webContents.openDevTools(); // 開発者ツールをデフォルトで開かないようにする
 };
 
 app.whenReady().then(() => {
@@ -66,6 +70,20 @@ app.on('window-all-closed', () => {
 });
 
 // --- IPC Handlers ---
+
+// ウィンドウタイトルを更新
+ipcMain.on('update-title', (event, filePath) => {
+  if (win) {
+    if (filePath) {
+      // .html拡張子を削除し、パスを整形
+      const titlePath = filePath.replace(/\.html$/, '');
+      win.setTitle(`take_note - ${titlePath}`);
+    } else {
+      // ファイルが開かれていない場合（新規ノートなど）
+      win.setTitle('take_note - New Note');
+    }
+  }
+});
 
 // レンダラープロセスからのエラーを記録
 ipcMain.on('log-error', (event, error) => {
@@ -152,12 +170,31 @@ ipcMain.handle('get-files', async (event, subDir = '') => {
 });
 
 ipcMain.handle('read-file', async (event, fileName) => {
+  const filePath = resolveSecurePath(fileName);
   try {
-    const filePath = resolveSecurePath(fileName);
-    const content = await fs.readFile(filePath, 'utf-8');
-    return content;
+    // ファイルをバッファとして読み込む
+    const fileBuffer = await fs.readFile(filePath);
+    try {
+      // まずZIPアーカイブとして解釈を試みる
+      const zip = new AdmZip(fileBuffer);
+      const zipEntry = zip.getEntry('index.html');
+      if (zipEntry) {
+        // ZIP内にindex.htmlがあれば、その内容を返す
+        return zipEntry.getData().toString('utf-8');
+      }
+      // ZIPだがindex.htmlがない場合（不正な形式）
+      console.warn(`Archive "${fileName}" does not contain 'index.html'.`);
+      return '';
+    } catch (zipError) {
+      // ZIPの解釈に失敗した場合、プレーンなHTMLファイルとして内容を返す
+      // これにより、既存のファイルとの後方互換性が保たれる
+      return fileBuffer.toString('utf-8');
+    }
   } catch (error) {
-    console.error(`Failed to read file: ${fileName}`, error);
+    // fs.readFile自体が失敗した場合（ファイルが存在しないなど）
+    if (error.code !== 'ENOENT') {
+      console.error(`Failed to read file: ${fileName}`, error);
+    }
     return null;
   }
 });
@@ -166,7 +203,13 @@ ipcMain.handle('write-file', async (event, fileName, content) => {
   try {
     const filePath = resolveSecurePath(fileName);
     await fs.mkdir(path.dirname(filePath), { recursive: true });
-    await fs.writeFile(filePath, content, 'utf-8');
+
+    // 新しいZIPアーカイブを作成
+    const zip = new AdmZip();
+    // コンテンツを 'index.html' としてZIPに追加
+    zip.addFile('index.html', Buffer.from(content, 'utf-8'));
+    // バッファをディスクに書き込む
+    await fs.writeFile(filePath, zip.toBuffer());
     return { success: true };
   } catch (error) {
     console.error(`Failed to write file: ${fileName}`, error);

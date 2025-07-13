@@ -11,7 +11,15 @@
 <body>
   <div class="container">
     <div id="sidebar" class="sidebar">
-      <!-- ここにファイルツリーが表示されます -->
+      <div id="sidebar-content">
+        <!-- ここにボタンやファイルツリーが動的に表示されます -->
+      </div>
+      <div class="sidebar-footer">
+        <label class="mode-switch">
+          <input type="checkbox" id="mode-switch-checkbox">
+          <span>View Mode</span>
+        </label>
+      </div>
     </div>
     <div class="main-content">
       <textarea id="editor" class="editor-pane"></textarea>
