@@ -1,6 +1,6 @@
 {
   "name": "take_note",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "This is take note app.",
   "repository": {
     "type": "git",
@@ -12,7 +12,7 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "lint": "eslint . --fix *.ts"
+    "lint": "eslint *.ts --fix"
   },
   "devDependencies": {
     "@types/adm-zip": "^0.5.7",
@@ -31,6 +31,7 @@
     "eslint": "^9.31.0",
     "highlight.js": "^11.11.1",
     "katex": "^0.16.22",
-    "markdown-it": "^13.0.2"
+    "markdown-it": "^13.0.2",
+    "markdown-it-texmath": "^1.0.0"
   }
 }

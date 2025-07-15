@@ -24,9 +24,9 @@ export default tseslint.config(
       './dist/',
       './dist-electron/',
       './node_modules/',
-      '*.js',
-      '*.cjs',
-      '*.mjs'
+      '**/*.js',
+      '**/*.cjs',
+      '**/*.mjs'
     ]
   },
 

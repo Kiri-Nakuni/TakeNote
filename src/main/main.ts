@@ -190,11 +190,11 @@ ipcMain.handle('read-file', async (event: IpcMainInvokeEvent, fileName: string):
     try {
       // ZIPアーカイブとして解釈を試みる
       const zip = new AdmZip(fileBuffer);
-      const zipEntry = zip.getEntry('index.html');
+      const zipEntry = zip.getEntry('index.md');
       if (zipEntry) {
         return zipEntry.getData().toString('utf-8');
       }
-      console.warn(`Archive "${fileName}" does not contain 'index.html'.`);
+      console.warn(`Archive "${fileName}" does not contain 'index.md'.`);
       return '';
     } catch (zipError) {
       // ZIPでなければプレーンテキストとして解釈（後方互換性）
@@ -215,7 +215,7 @@ ipcMain.handle('write-file', async (event: IpcMainInvokeEvent, fileName: string,
     await fs.mkdir(path.dirname(filePath), { recursive: true });
 
     const zip = new AdmZip();
-    zip.addFile('index.html', Buffer.from(content, 'utf-8'));
+    zip.addFile('index.md', Buffer.from(content, 'utf-8'));
     
     const metaData = { mode: 'note' };
     zip.addFile('.meta', Buffer.from(JSON.stringify(metaData), 'utf-8'));
