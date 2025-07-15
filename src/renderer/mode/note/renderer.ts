@@ -1,5 +1,7 @@
 /// <reference path="../../../types/global.d.ts" />
 
+import { processDynamicHtml } from '@/renderer/mode/note/dynamicHtmlProcessor';
+
 // レンダラープロセスのエラーを捕捉してメインプロセスに送信
 window.addEventListener('error', (event: ErrorEvent) => {
   window.appUtils.logError({
@@ -44,11 +46,10 @@ window.addEventListener('DOMContentLoaded', async () => {
     modalInput.value = '';
     modalInput.placeholder = placeholder;
     inputModal.showModal();
-    // setTimeoutを使用して、現在のイベントループが完了し、ダイアログが
-    // フォーカスを受け入れられる状態になってからフォーカスを当てます。
-    setTimeout(() => {
+    // requestAnimationFrame を使用して、ダイアログが確実に表示されてからフォーカスを当てる
+    requestAnimationFrame(() => {
       modalInput.focus();
-    }, 0);
+    });
 
     return new Promise(resolve => {
       let result: string | null = null; // デフォルトはキャンセル(null)
@@ -72,6 +73,9 @@ window.addEventListener('DOMContentLoaded', async () => {
       const closeHandler = () => {
         cleanup();
         resolve(result);
+        // ダイアログを閉じた瞬間にフォーカスが宙ぶらりんになることがあるため、
+        // メインのエディタにフォーカスを戻す。
+        editor.focus();
       };
 
       modalConfirmButton.addEventListener('click', confirmHandler);
@@ -98,17 +102,8 @@ window.addEventListener('DOMContentLoaded', async () => {
   const render = async (markdown: string): Promise<void> => {
     const htmlResult = window.markdown.render(markdown);
     preview.innerHTML = htmlResult;
-
-    // KaTeXの\htmlDataで付与された属性に基づいて動的にスケーリングを適用
-    const elementsWithScale: NodeListOf<HTMLElement> = preview.querySelectorAll('span[data-xscale], span[data-yscale]');
-    elementsWithScale.forEach(el => {
-      const xScale = el.dataset.xscale || '1';
-      const yScale = el.dataset.yscale || '1';
-      // transformを適用するには、displayがinline-blockまたはblockである必要がある
-      el.style.display = 'inline-block';
-      el.style.transformOrigin = 'center';
-      el.style.transform = `scale(${xScale}, ${yScale})`;
-    });
+    // KaTeXのカスタムマクロによって生成されたHTMLを処理
+    processDynamicHtml(preview);
   };
 
   /**
@@ -330,4 +325,12 @@ window.addEventListener('DOMContentLoaded', async () => {
       render(target.value);
     }, 250);
   });
+
+  // Vite開発時のHMRによるフォーカス喪失対策
+  if (import.meta.hot) {
+    import.meta.hot.on('vite:afterUpdate', () => {
+      // HMRでDOMが更新された後、エディタにフォーカスを戻す
+      requestAnimationFrame(() => editor.focus());
+    });
+  }
 });

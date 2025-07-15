@@ -1,7 +1,7 @@
 /* テーマ変数を定義 */
 :root {
   --font-family-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-  --font-family-mono: "Courier New", Courier, "Lucida Console", Monaco, monospace;
+  --font-family-mono: "Source Han Code JP", Courier, "Lucida Console", Monaco, monospace;
 
   --bg-color: #ffffff;
   --text-color: #212529;
@@ -146,6 +146,7 @@ body, html {
 
 /* KaTeXの\html...コマンドで生成されるspanをスタイリング */
 .enclosing {
+  display: inline-block;
 }
 /* KaTeX内のHTMLをスケーリングするためのカスタムクラス */
 .scale-me {

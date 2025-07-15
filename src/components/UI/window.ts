@@ -25,17 +25,27 @@ export function createWindow(): void {
     width: 1200,
     height: 800,
     webPreferences: {
-      // コンパイル後のJSファイルからの相対パスを構築します。
-      // (dist/components/UI/window.js -> dist/preload/preload.js)
-      preload: path.join(__dirname, '..', '..', 'preload', 'preload.js'),
+      // Viteはpreload.tsをdist-electron/preload.jsに出力します。
+      // main.jsもdist-electron/main.jsに出力されるため、__dirnameはdist-electronを指します。
+      preload: path.join(__dirname, 'preload.js'),
       contextIsolation: true,
       nodeIntegration: false,
       sandbox: false
     }
   });
 
-  // 新しいパスのindex.htmlをロード
-  mainWindow.loadFile('src/renderer/general/index.html');
+  // Vite DEV server URL.
+  // vite-plugin-electronが開発時にこの環境変数を設定します。
+  const VITE_DEV_SERVER_URL = process.env.VITE_DEV_SERVER_URL;
+  
+  if (VITE_DEV_SERVER_URL) {
+    // 開発時はVite開発サーバーのURLを読み込みます。
+    mainWindow.loadURL(VITE_DEV_SERVER_URL);
+  } else {
+    // 本番時はビルドされたindex.htmlを読み込みます。
+    // __dirname は `dist-electron` を指し、index.html はプロジェクトルートからビルドされて `dist` に配置されます。
+    mainWindow.loadFile(path.join(__dirname, '../dist/index.html'));
+  }
 
   // ウィンドウが閉じられたときの処理
   mainWindow.on('closed', () => {

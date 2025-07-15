@@ -2,6 +2,7 @@
 // これにより、レンダラープロセス（.tsファイル）で `window.xxx` のように
 // APIを呼び出す際に、TypeScriptの型チェックと自動補完が機能するようになります。
 
+/// <reference types="vite/client" />
 interface FileInfo {
   name: string;
   path: string;

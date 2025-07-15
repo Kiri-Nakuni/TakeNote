@@ -1,6 +1,6 @@
 {
   "name": "take_note",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "This is take note app.",
   "repository": {
     "type": "git",
@@ -8,23 +8,25 @@
   },
   "license": "MIT",
   "author": "Suima",
-  "main": "main.js",
+  "main": "dist-electron/main.js",
   "scripts": {
-    "build": "tsc",
-    "prestart": "npm run build",
-    "start": "electron ."
+    "dev": "vite",
+    "build": "vite build"
   },
   "devDependencies": {
+    "@types/adm-zip": "^0.5.7",
     "@types/katex": "^0.16.7",
     "@types/markdown-it": "^14.1.2",
     "electron": "^37.2.1",
-    "typescript": "^5.5.3"
+    "typescript": "^5.5.3",
+    "vite": "^7.0.4",
+    "vite-plugin-electron": "^0.29.0",
+    "vite-plugin-electron-renderer": "^0.14.6"
   },
   "dependencies": {
     "adm-zip": "^0.5.14",
     "highlight.js": "^11.11.1",
     "katex": "^0.16.22",
-    "markdown-it": "^13.0.2",
-    "markdown-it-texmath": "^1.0.0"
+    "markdown-it": "^13.0.2"
   }
 }
