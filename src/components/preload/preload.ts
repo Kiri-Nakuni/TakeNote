@@ -3,7 +3,7 @@ import MarkdownIt from 'markdown-it';
 import texmath from 'markdown-it-texmath';
 import katex, { KatexOptions } from 'katex';
 import hljs from 'highlight.js';
-import { katexMacros } from '@/components/preload/katexMacros';
+import { katexMacros } from '@/components/preload/katex/katexMacros';
 
 // --- 型定義 ---
 
@@ -47,10 +47,6 @@ const md = new MarkdownIt({
     return '<pre class="hljs"><code>' + md.utils.escapeHtml(str) + '</code></pre>';
   },
 });
-
-// (以降のコードは変更ありません)
-// ...
-
 md.use(texmath, {
   engine: katex,
   delimiters: 'dollars' as const,
@@ -68,7 +64,7 @@ md.use(texmath, {
       return false;
     },
     macros: katexMacros,
-  } as KatexOptions, // オブジェクトをKatexOptionsとして型アサーション
+  } as KatexOptions, 
 });
 
 

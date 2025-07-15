@@ -31,7 +31,7 @@ export function processDynamicHtml(previewElement: HTMLElement): void {
 
     // \rotatebox の処理: data-deg を解釈
     if (el.dataset.deg) {
-      transforms.push(`rotate(${el.dataset.deg}deg)`);
+      transforms.push(`rotate(-${el.dataset.deg}deg)`);
     }
 
     el.style.display = 'inline-block';

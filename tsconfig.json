@@ -4,16 +4,16 @@
     "useDefineForClassFields": true,
     "module": "esnext",
     "lib": ["ESNext", "DOM", "DOM.Iterable"],
-    "moduleResolution": "bundler",
+    "moduleResolution": "Node",
     "strict": true,
     "sourceMap": true,
     "resolveJsonModule": true,
     "esModuleInterop": true,
     "types": ["vite/client"],
-    "baseUrl": "./",
+    "baseUrl": ".",
     "paths": {
-      "@/": ["./src/*"]
+      "@/*": ["./src/*"]
     }
   },
-  "include": ["src", "vite.config.ts"]
+  "include": ["src", "vite.config.ts","src/**/*.ts"],
 }

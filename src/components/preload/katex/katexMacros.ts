@@ -8,5 +8,5 @@ export const katexMacros = {
   "\\scalebox@xyz": "\\htmlData{xscale=#1, yscale=#2}{#3}",
   "\\scalebox@xy": "\\htmlData{xscale=#1, yscale=#1}{#2}",
   "\\XeTeX": "\\textrm{\\html@mathml{X\\kern-.125em\\raisebox{-0.5ex}{\\reflectbox{E}}\\kern-.1667emT\\kern-.1667em\\raisebox{-.5ex}{E}\\kern-.125emX}{XeTeX}}",
-  "\\rotatebox": "\\htmlData{deg=#1}{#2}"
+  "\\rotatebox": "\\htmlData{deg=#1}{#2}",
 };
