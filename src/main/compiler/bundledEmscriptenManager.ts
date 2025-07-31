@@ -73,16 +73,15 @@ export class BundledEmscriptenManager {
       const platformPath = path.join(this.resourcesPath, platform);
       console.log('Platform path:', platformPath);
 
-      // emsdk ディレクトリが存在するかチェック
-      const emsdkPath = path.join(this.resourcesPath, 'emsdk');
-      if (!await fs.pathExists(emsdkPath)) {
-        console.log(`Emscripten SDKが見つかりません: ${emsdkPath}`);
+      // プラットフォーム固有ディレクトリが存在するかチェック
+      if (!await fs.pathExists(platformPath)) {
+        console.log(`プラットフォーム固有ディレクトリが見つかりません: ${platformPath}`);
         return null;
       }
 
-      // Emscriptenのバイナリパスを構築（実際の場所）
-      const emccFileName = platform === 'win32' ? 'emcc.bat' : 'emcc';
-      const emccPath = path.join(emsdkPath, 'upstream', 'emscripten', emccFileName);
+      // Emscriptenのバイナリパスを構築（プラットフォーム固有の場所）
+      const emccFileName = platform === 'win32' ? 'emcc.bat' : 'emcc.sh';
+      const emccPath = path.join(platformPath, emccFileName);
 
       // emccバイナリが存在するかチェック
       if (!await fs.pathExists(emccPath)) {
@@ -96,8 +95,8 @@ export class BundledEmscriptenManager {
         platform,
         arch,
         emccPath,
-        emscoriptenRoot: path.join(emsdkPath, 'upstream', 'emscripten'),
-        llvmRoot: path.join(emsdkPath, 'upstream', 'bin'),
+        emscoriptenRoot: platformPath,
+        llvmRoot: platformPath,
         available: true
       };
 
@@ -105,7 +104,7 @@ export class BundledEmscriptenManager {
 
       // 実行権限を設定（Unix系のみ）
       if (platform !== 'win32') {
-        await this.setExecutablePermissions(path.join(emsdkPath, 'upstream', 'emscripten'));
+        await this.setExecutablePermissions(platformPath);
       }
 
       return this.bundledEmscripten;

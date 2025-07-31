@@ -92,9 +92,17 @@ export class EmscriptenService {
 
       // 最後の手段としてシステム版をチェック（開発環境でのフォールバック）
       console.log('💡 [Emscripten] Trying system version as fallback...');
-      const { stdout } = await execAsync(`${this.config.emccPath} --version`);
-      console.log('⚠️ [Emscripten] Using system version:', stdout.trim());
-      return true;
+      try {
+        // タイムアウト付きでシステム版をチェック
+        const { stdout } = await execAsync(`${this.config.emccPath} --version`, { 
+          timeout: 5000 // 5秒でタイムアウト 
+        });
+        console.log('⚠️ [Emscripten] Using system version:', stdout.trim());
+        return true;
+      } catch (systemError) {
+        console.warn('💥 [Emscripten] System version also failed:', systemError);
+        return false;
+      }
     } catch (error) {
       console.warn('Emscripten not found:', error);
       return false;

@@ -1,0 +1,39 @@
+#!/bin/bash
+# Entry point for running emar on Linux systems.
+
+# Get the directory where this script is located
+MYDIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+# Look for emsdk in the parent directory structure
+EMSDK_ROOT=""
+if [ -d "$MYDIR/../emsdk" ]; then
+    EMSDK_ROOT="$MYDIR/../emsdk"
+elif [ -d "$MYDIR/../../emsdk" ]; then
+    EMSDK_ROOT="$MYDIR/../../emsdk"
+fi
+
+if [ -z "$EMSDK_ROOT" ]; then
+    echo "Error: Cannot find emsdk directory" >&2
+    exit 1
+fi
+
+# Set up environment
+export EMSDK="$EMSDK_ROOT"
+export EM_CONFIG="$EMSDK_ROOT/.emscripten"
+
+# Find python
+if [ -n "$EMSDK_PYTHON" ]; then
+    PYTHON="$EMSDK_PYTHON"
+elif [ -x "$EMSDK_ROOT/node/22.16.0_64bit/bin/python3" ]; then
+    PYTHON="$EMSDK_ROOT/node/22.16.0_64bit/bin/python3"
+elif command -v python3 > /dev/null 2>&1; then
+    PYTHON="python3"
+elif command -v python > /dev/null 2>&1; then
+    PYTHON="python"
+else
+    echo "Error: Cannot find python" >&2
+    exit 1
+fi
+
+# Execute emar
+exec "$PYTHON" "$EMSDK_ROOT/upstream/emscripten/emar.py" "$@"
