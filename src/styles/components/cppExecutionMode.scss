@@ -1,0 +1,402 @@
+/* C++実行モード専用スタイル */
+
+.cpp-execution-mode {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+  max-width: 100%;
+  background-color: var(--bg-color);
+  overflow: hidden;
+}
+
+/* デバッグコンソールエリア (上1/3) */
+.terminal-area {
+  height: 33.333%;
+  display: flex;
+  flex-direction: column;
+  border-bottom: 2px solid var(--border-color);
+  overflow: hidden;
+}
+
+.terminal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 12px;
+  background: var(--header-bg);
+  border-bottom: 1px solid var(--border-color);
+
+  h4 {
+    margin: 0;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-color);
+  }
+}
+
+.terminal-controls {
+  display: flex;
+  gap: 4px;
+}
+
+/* コンパイラオプション */
+.compiler-options {
+  padding: 8px 12px;
+  background: var(--bg-secondary);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.option-group {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 8px;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.option-label {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  color: var(--text-color);
+
+  select {
+    padding: 2px 4px;
+    border: 1px solid var(--border-color);
+    border-radius: 2px;
+    background: var(--input-bg);
+    color: var(--text-color);
+    font-size: 11px;
+  }
+
+  input[type="checkbox"] {
+    accent-color: var(--primary-color);
+  }
+}
+
+/* ターミナル出力 */
+.terminal-output {
+  flex: 1;
+  padding: 8px 12px;
+  background: var(--code-bg);
+  font-family: var(--font-family-mono, 'Courier New', monospace);
+  font-size: 12px;
+  overflow-y: auto;
+  line-height: 1.4;
+}
+
+.terminal-line {
+  display: flex;
+  margin-bottom: 2px;
+
+  &.info .line-prefix {
+    color: var(--info-color);
+  }
+
+  &.success .line-prefix {
+    color: var(--success-color);
+  }
+
+  &.error .line-prefix {
+    color: var(--error-color);
+  }
+
+  &.warning .line-prefix {
+    color: var(--warning-color);
+  }
+
+  &.compiling .line-prefix {
+    color: var(--primary-color);
+    animation: spin 1s linear infinite;
+  }
+
+  &.executing .line-prefix {
+    color: var(--success-color);
+    animation: pulse 1s ease-in-out infinite;
+  }
+
+  .line-prefix {
+    margin-right: 8px;
+    font-weight: bold;
+    min-width: 20px;
+  }
+
+  .line-content {
+    flex: 1;
+    color: var(--text-color);
+    word-wrap: break-word;
+  }
+}
+
+/* 標準入力エリア (中1/3) */
+.input-area {
+  height: 33.333%;
+  display: flex;
+  flex-direction: column;
+  border-bottom: 2px solid var(--border-color);
+  overflow: hidden;
+}
+
+/* 標準出力エリア (下1/3) */
+.output-area {
+  height: 33.333%;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.panel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 12px;
+  background: var(--header-bg);
+  border-bottom: 1px solid var(--border-color);
+
+  h5 {
+    margin: 0;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-color);
+  }
+}
+
+.output-controls {
+  display: flex;
+  gap: 4px;
+}
+
+/* 入力エリア */
+.input-textarea {
+  flex: 1;
+  padding: 8px 12px;
+  border: none;
+  resize: none;
+  background: var(--input-bg);
+  color: var(--text-color);
+  font-family: var(--font-family-mono, 'Courier New', monospace);
+  font-size: 12px;
+  line-height: 1.4;
+  outline: none;
+  overflow-y: auto;
+  min-height: 0;
+
+  &::placeholder {
+    color: var(--text-muted);
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+}
+
+.input-info {
+  padding: 4px 12px;
+  background: var(--bg-secondary);
+  border-top: 1px solid var(--border-color);
+  font-size: 11px;
+  color: var(--text-muted);
+  text-align: right;
+}
+
+/* 出力エリア */
+.output-content {
+  flex: 1;
+  padding: 8px 12px;
+  overflow-y: auto;
+  background: var(--code-bg);
+  font-family: var(--font-family-mono, 'Courier New', monospace);
+  font-size: 12px;
+  line-height: 1.4;
+  min-height: 0;
+}
+
+.output-placeholder {
+  color: var(--text-muted);
+  font-style: italic;
+  text-align: center;
+  padding: 20px;
+}
+
+.program-output {
+  color: var(--text-color);
+
+  pre {
+    margin: 0;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+  }
+}
+
+.error-output {
+  margin-top: 12px;
+  padding: 8px;
+  background: var(--error-bg);
+  border: 1px solid var(--error-border);
+  border-radius: 4px;
+
+  h6 {
+    margin: 0 0 8px 0;
+    color: var(--error-color);
+    font-size: 11px;
+    font-weight: 600;
+  }
+
+  pre {
+    margin: 0;
+    color: var(--error-color);
+    white-space: pre-wrap;
+    word-wrap: break-word;
+  }
+}
+
+.output-info {
+  display: flex;
+  gap: 16px;
+  padding: 4px 12px;
+  background: var(--bg-secondary);
+  border-top: 1px solid var(--border-color);
+  font-size: 11px;
+  color: var(--text-muted);
+}
+/* 統計情報エリア */
+.execution-stats {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 4px 12px;
+  background: var(--bg-secondary);
+  border-top: 1px solid var(--border-color);
+  font-size: 11px;
+  color: var(--text-muted);
+  flex-shrink: 0;
+
+  .stats-row {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+
+  span {
+    &.success {
+      color: var(--success-color);
+    }
+
+    &.error {
+      color: var(--error-color);
+    }
+  }
+}
+
+/* エラー通知モーダル */
+.error-notification-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10000;
+
+  .error-modal-content {
+    background: var(--bg-color);
+    border-radius: 8px;
+    max-width: 80vw;
+    max-height: 80vh;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+
+    .error-modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 16px;
+      background: var(--error-bg);
+      border-bottom: 1px solid var(--error-border);
+
+      h3 {
+        margin: 0;
+        color: var(--error-color);
+        font-size: 16px;
+      }
+
+      .close-button {
+        background: none;
+        border: none;
+        font-size: 20px;
+        cursor: pointer;
+        color: var(--error-color);
+        padding: 4px;
+        border-radius: 4px;
+
+        &:hover {
+          background: rgba(255, 255, 255, 0.1);
+        }
+      }
+    }
+
+    .error-modal-body {
+      flex: 1;
+      padding: 16px;
+      overflow-y: auto;
+
+      pre {
+        margin: 0;
+        white-space: pre-wrap;
+        word-wrap: break-word;
+        background: var(--code-bg);
+        padding: 12px;
+        border-radius: 4px;
+        border: 1px solid var(--border-color);
+        color: var(--error-color);
+        font-family: var(--font-family-mono, 'Courier New', monospace);
+        font-size: 12px;
+        line-height: 1.4;
+      }
+    }
+  }
+}
+
+/* アニメーション */
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+/* レスポンシブ対応 */
+@media (max-width: 768px) {
+  .terminal-controls {
+    flex-wrap: wrap;
+    gap: 2px;
+  }
+
+  .option-group {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .stats-row {
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .error-modal-content {
+    max-width: 95vw;
+    max-height: 90vh;
+  }
+}

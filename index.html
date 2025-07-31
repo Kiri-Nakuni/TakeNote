@@ -1,42 +1,177 @@
 <!DOCTYPE html>
 <html lang="ja">
-<head>
-  <meta charset="UTF-8">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self' https://cdn.jsdelivr.net 'unsafe-inline'; font-src 'self';">
-  <title>Take-note</title>
-  <link rel="stylesheet" href="/node_modules/katex/dist/katex.min.css">
-  <link rel="stylesheet" href="/src/renderer/mode/note/style.css">
-  <link rel="stylesheet" href="/node_modules/highlight.js/styles/default.css">
-</head>
-<body>
-  <div class="container">
-    <div id="sidebar" class="sidebar">
-      <div id="sidebar-content">
-        <!-- ここにボタンやファイルツリーが動的に表示されます -->
-      </div>
-      <div class="sidebar-footer">
-        <label class="mode-switch">
-          <input type="checkbox" id="mode-switch-checkbox">
-          <span>View Mode</span>
-        </label>
-      </div>
-    </div>
-    <div class="main-content">
-      <textarea id="editor" class="editor-pane"></textarea>
-      <div id="preview" class="preview-pane"></div>
-    </div>
-  </div>
-  <script type="module" src="/src/renderer/mode/note/renderer.ts"></script>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TakeNote</title>
+    <!-- CSP is handled dynamically by the main process -->
+    <style>
+      /* リセットスタイル */
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      
+      html, body {
+        height: 100%;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+        font-size: 14px;
+        line-height: 1.5;
+        background: var(--bg-color);
+        color: #000000;
+        overflow: hidden;
+      }
+      
+      #app {
+        height: 100%;
+        background: var(--bg-color);
+        color: var(--text-color);
+      }
+      
+      /* ライトテーマのデフォルト値 */
+      :root [data-theme="light"] {
+        --bg-color: #ffffff;
+        --bg-secondary: #f8f9fa;
+        --bg-tertiary: #e9ecef;
+        --text-color: #212529;
+        --text-muted: #6c757d;
+        --text-secondary: #495057;
+        --border-color: #dee2e6;
+        --border-light: #e9ecef;
+        --primary-color: #007acc;
+        --primary-hover: #0056b3;
+        --primary-alpha: rgba(0, 122, 204, 0.1);
+        --success-color: #198754;
+        --warning-color: #ffc107;
+        --danger-color: #dc3545;
+        --danger-bg: #ffe6e6;
+        --info-color: #0dcaf0;
+        --hover-bg: #f8f9fa;
+        --active-bg: #e9ecef;
+        --focus-color: #007acc;
+        --shadow: rgba(0, 0, 0, 0.1);
+        --shadow-light: rgba(0, 0, 0, 0.05);
+        --input-bg: #ffffff;
+        --modal-bg: #ffffff;
+        --modal-overlay: rgba(0, 0, 0, 0.5);
+        --sidebar-bg: #f8f9fa;
+        --header-bg: #ffffff;
+        --footer-bg: #f8f9fa;
+        --code-bg: #f8f9fa;
+        --code-border: #e9ecef;
+        --accent-color: #007acc;
+        --accent-color-alpha: rgba(0, 122, 204, 0.1);
+        --accent-bg: #e3f2fd;
+        --accent-bg-alt: #f3e5f5;
+        --accent-border: #90caf9;
+        --accent-border-alt: #ce93d8;
+        --accent-text: #007acc;
+        --status-bar-bg: #007acc;
+        --status-bar-text: #ffffff;
+        --status-badge-bg: rgba(255, 255, 255, 0.1);
+        --status-badge-hover: rgba(255, 255, 255, 0.25);
+      }
 
-  <dialog id="inputModal" class="modal-dialog">
-    <div class="modal-content">
-      <h2 id="modalTitle"></h2>
-      <input type="text" id="modalInput" placeholder="ファイル名またはフォルダ名を入力...">
-      <div class="modal-buttons">
-        <button id="modalCancelButton">キャンセル</button>
-        <button id="modalConfirmButton">OK</button>
-      </div>
-    </div>
-  </dialog>
-</body>
+      /* ダークテーマ */
+      [data-theme="dark"] {
+        --bg-color: #1a1a1a;
+        --bg-secondary: #2d2d2d;
+        --bg-tertiary: #404040;
+        --text-color: #e0e0e0;
+        --text-muted: #a0a0a0;
+        --text-secondary: #c0c0c0;
+        --border-color: #404040;
+        --border-light: #333333;
+        --primary-color: #4fc3f7;
+        --primary-hover: #29b6f6;
+        --primary-alpha: rgba(79, 195, 247, 0.1);
+        --success-color: #4caf50;
+        --warning-color: #ff9800;
+        --danger-color: #f44336;
+        --danger-bg: #4a1a1a;
+        --info-color: #2196f3;
+        --hover-bg: #333333;
+        --active-bg: #404040;
+        --focus-color: #4fc3f7;
+        --shadow: rgba(0, 0, 0, 0.3);
+        --shadow-light: rgba(0, 0, 0, 0.15);
+        --input-bg: #2d2d2d;
+        --modal-bg: #1a1a1a;
+        --modal-overlay: rgba(0, 0, 0, 0.7);
+        --sidebar-bg: #2d2d2d;
+        --header-bg: #1a1a1a;
+        --footer-bg: #2d2d2d;
+        --code-bg: #2d2d2d;
+        --code-border: #404040;
+        --accent-color: #4fc3f7;
+        --accent-color-alpha: rgba(79, 195, 247, 0.1);
+        --accent-bg: #1e3a4a;
+        --accent-bg-alt: #2d2040;
+        --accent-border: #4fc3f7;
+        --accent-border-alt: #ab47bc;
+        --accent-text: #4fc3f7;
+        --status-bar-bg: #1a1a1a;
+        --status-bar-text: #e0e0e0;
+        --status-badge-bg: rgba(255, 255, 255, 0.1);
+        --status-badge-hover: rgba(255, 255, 255, 0.2);
+      }
+
+      /* システムテーマ対応 - data-theme-ready属性が設定されるまで無効 */
+      @media (prefers-color-scheme: dark) {
+        :root[data-theme-ready]:not([data-theme="light"]) {
+          --bg-color: #1a1a1a;
+          --bg-secondary: #2d2d2d;
+          --bg-tertiary: #404040;
+          --text-color: #e0e0e0;
+          --text-muted: #a0a0a0;
+          --text-secondary: #c0c0c0;
+          --border-color: #404040;
+          --border-light: #333333;
+          --primary-color: #4fc3f7;
+          --primary-hover: #29b6f6;
+          --primary-alpha: rgba(79, 195, 247, 0.1);
+          --success-color: #4caf50;
+          --warning-color: #ff9800;
+          --danger-color: #f44336;
+          --danger-bg: #4a1a1a;
+          --info-color: #2196f3;
+          --hover-bg: #333333;
+          --active-bg: #404040;
+          --focus-color: #4fc3f7;
+          --shadow: rgba(0, 0, 0, 0.3);
+          --shadow-light: rgba(0, 0, 0, 0.15);
+          --input-bg: #2d2d2d;
+          --modal-bg: #1a1a1a;
+          --modal-overlay: rgba(0, 0, 0, 0.7);
+          --sidebar-bg: #2d2d2d;
+          --header-bg: #1a1a1a;
+          --footer-bg: #2d2d2d;
+          --code-bg: #2d2d2d;
+          --code-border: #404040;
+          --accent-color: #4fc3f7;
+          --accent-color-alpha: rgba(79, 195, 247, 0.1);
+          --accent-bg: #1e3a4a;
+          --accent-bg-alt: #2d2040;
+          --accent-border: #4fc3f7;
+          --accent-border-alt: #ab47bc;
+          --accent-text: #4fc3f7;
+          --status-bar-bg: #1a1a1a;
+          --status-bar-text: #e0e0e0;
+          --status-badge-bg: rgba(255, 255, 255, 0.1);
+          --status-badge-hover: rgba(255, 255, 255, 0.2);
+        }
+      }
+
+      /* グローバルトランジション */
+      * {
+        transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="app" style="background-color: #1a1a1a; min-height: 100vh;"></div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
 </html>

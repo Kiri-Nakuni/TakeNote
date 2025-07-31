@@ -1,0 +1,213 @@
+/* ConfigViewer.vue専用スタイル */
+
+.config-viewer {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 20px;
+  background: var(--background);
+  color: var(--text);
+  
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    
+    h2 {
+      margin: 0;
+      font-size: 1.5rem;
+      font-weight: 600;
+    }
+    
+    .actions {
+      display: flex;
+      gap: 10px;
+    }
+  }
+  
+  .config-content {
+    flex: 1;
+    overflow-y: auto;
+    
+    .section {
+      margin-bottom: 30px;
+      
+      h3 {
+        margin: 0 0 15px 0;
+        font-size: 1.2rem;
+        font-weight: 500;
+        color: var(--primary);
+        border-bottom: 2px solid var(--border);
+        padding-bottom: 5px;
+      }
+      
+      .form-group {
+        margin-bottom: 15px;
+        
+        .form-row {
+          display: flex;
+          align-items: center;
+          gap: 15px;
+          margin-bottom: 10px;
+          
+          label {
+            min-width: 120px;
+            font-weight: 500;
+          }
+          
+          input, select {
+            flex: 1;
+            padding: 8px 12px;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            background: var(--input-background);
+            color: var(--text);
+            font-size: 14px;
+            
+            &:focus {
+              outline: none;
+              border-color: var(--primary);
+              box-shadow: 0 0 0 2px var(--primary-alpha);
+            }
+          }
+          
+          input[type="checkbox"] {
+            flex: none;
+            width: 18px;
+            height: 18px;
+            margin: 0;
+          }
+          
+          input[type="number"] {
+            max-width: 100px;
+          }
+        }
+        
+        .description {
+          font-size: 0.9rem;
+          color: var(--text-secondary);
+          margin-top: 5px;
+          margin-left: 135px;
+        }
+      }
+    }
+  }
+  
+  .status-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 0;
+    border-top: 1px solid var(--border);
+    margin-top: 20px;
+    
+    .status-info {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      
+      &.modified {
+        color: var(--warning);
+      }
+      
+      &.saved {
+        color: var(--success);
+      }
+    }
+    
+    .validation-errors {
+      color: var(--error);
+      font-size: 0.9rem;
+      
+      ul {
+        margin: 0;
+        padding-left: 20px;
+        
+        li {
+          margin-bottom: 2px;
+        }
+      }
+    }
+  }
+}
+
+/* ダークテーマ対応 */
+[data-theme="dark"] .config-viewer {
+  input, select {
+    background: var(--dark-input-background);
+    border-color: var(--dark-border);
+    
+    &:focus {
+      border-color: var(--dark-primary);
+      box-shadow: 0 0 0 2px var(--dark-primary-alpha);
+    }
+  }
+}
+
+/* レスポンシブデザイン */
+@media (max-width: 768px) {
+  .config-viewer {
+    padding: 15px;
+    
+    .header {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 15px;
+      
+      .actions {
+        width: 100%;
+        justify-content: flex-end;
+      }
+    }
+    
+    .section {
+      .form-group {
+        .form-row {
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 5px;
+          
+          label {
+            min-width: auto;
+            width: 100%;
+          }
+          
+          input, select {
+            width: 100%;
+          }
+        }
+        
+        .description {
+          margin-left: 0;
+        }
+      }
+    }
+    
+    .status-bar {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 10px;
+    }
+  }
+}
+
+/* アクセシビリティ改善 */
+@media (prefers-reduced-motion: reduce) {
+  .config-viewer * {
+    transition: none !important;
+    animation: none !important;
+  }
+}
+
+/* フォーカス可視化 */
+.config-viewer {
+  input:focus,
+  select:focus,
+  button:focus {
+    outline: 2px solid var(--focus-outline);
+    outline-offset: 2px;
+  }
+}

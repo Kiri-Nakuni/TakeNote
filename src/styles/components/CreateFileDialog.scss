@@ -1,0 +1,293 @@
+/* CreateFileDialog.vue専用スタイル */
+
+.create-file-dialog {
+  padding: 20px;
+  min-width: 400px;
+  max-width: 500px;
+  
+  .form-group {
+    margin-bottom: 20px;
+    
+    &:last-of-type {
+      margin-bottom: 0;
+    }
+  }
+  
+  .form-label {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-color, #333);
+    
+    .required {
+      color: var(--error-color, #e74c3c);
+      margin-left: 4px;
+    }
+  }
+  
+  .mode-select {
+    width: 100%;
+    padding: 8px 12px;
+    border: 1px solid var(--border-color, #ddd);
+    border-radius: 4px;
+    font-size: 14px;
+    background: var(--bg-color, #fff);
+    color: var(--text-color, #333);
+    cursor: pointer;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    
+    &:focus {
+      outline: none;
+      border-color: var(--primary-color, #0066cc);
+      box-shadow: 0 0 0 2px rgba(0, 102, 204, 0.2);
+    }
+    
+    &:hover {
+      border-color: var(--primary-color, #0066cc);
+    }
+    
+    option {
+      padding: 8px;
+      font-size: 14px;
+    }
+  }
+  
+  .validation-messages {
+    margin-top: 16px;
+    
+    .errors {
+      .error-item {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 12px;
+        margin-bottom: 8px;
+        background: var(--error-bg, #fef2f2);
+        border: 1px solid var(--error-border, #fecaca);
+        border-radius: 4px;
+        color: var(--error-color, #dc2626);
+        font-size: 13px;
+        
+        .error-icon {
+          flex-shrink: 0;
+          font-size: 16px;
+        }
+        
+        &:last-child {
+          margin-bottom: 0;
+        }
+      }
+    }
+    
+    .warnings {
+      .warning-item {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 12px;
+        margin-bottom: 8px;
+        background: var(--warning-bg, #fffbeb);
+        border: 1px solid var(--warning-border, #fed7aa);
+        border-radius: 4px;
+        color: var(--warning-color, #d97706);
+        font-size: 13px;
+        
+        .warning-icon {
+          flex-shrink: 0;
+          font-size: 16px;
+        }
+        
+        &:last-child {
+          margin-bottom: 0;
+        }
+      }
+    }
+  }
+  
+  .file-preview {
+    margin-top: 16px;
+    padding: 16px;
+    background: var(--preview-bg, #f8f9fa);
+    border: 1px solid var(--border-color, #e9ecef);
+    border-radius: 4px;
+    
+    .preview-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 12px;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text-secondary, #666);
+      
+      .preview-icon {
+        font-size: 16px;
+      }
+    }
+    
+    .preview-info {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 8px 16px;
+      font-size: 13px;
+      
+      .info-label {
+        font-weight: 500;
+        color: var(--text-secondary, #666);
+      }
+      
+      .info-value {
+        color: var(--text-color, #333);
+      }
+    }
+  }
+  
+  .dialog-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-top: 24px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border-color, #eee);
+    
+    .action-button {
+      min-width: 80px;
+    }
+  }
+}
+
+/* ダークテーマ対応 */
+[data-theme="dark"] .create-file-dialog {
+  .mode-select {
+    background: var(--dark-input-bg, #2d3748);
+    border-color: var(--dark-border, #4a5568);
+    color: var(--dark-text, #e2e8f0);
+    
+    &:focus {
+      border-color: var(--dark-primary, #63b3ed);
+      box-shadow: 0 0 0 2px rgba(99, 179, 237, 0.2);
+    }
+    
+    &:hover {
+      border-color: var(--dark-primary, #63b3ed);
+    }
+  }
+  
+  .validation-messages {
+    .errors .error-item {
+      background: var(--dark-error-bg, #2d1b1b);
+      border-color: var(--dark-error-border, #4a2222);
+      color: var(--dark-error-color, #f56565);
+    }
+    
+    .warnings .warning-item {
+      background: var(--dark-warning-bg, #2d2a1b);
+      border-color: var(--dark-warning-border, #4a4222);
+      color: var(--dark-warning-color, #ed8936);
+    }
+  }
+  
+  .file-preview {
+    background: var(--dark-preview-bg, #2d3748);
+    border-color: var(--dark-border, #4a5568);
+    
+    .preview-header {
+      color: var(--dark-text-secondary, #a0aec0);
+    }
+    
+    .preview-info {
+      .info-label {
+        color: var(--dark-text-secondary, #a0aec0);
+      }
+      
+      .info-value {
+        color: var(--dark-text, #e2e8f0);
+      }
+    }
+  }
+}
+
+/* アニメーション */
+.validation-messages {
+  .error-item,
+  .warning-item {
+    animation: slideInFromTop 0.3s ease-out;
+  }
+}
+
+.file-preview {
+  animation: fadeIn 0.3s ease-out;
+}
+
+@keyframes slideInFromTop {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* レスポンシブデザイン */
+@media (max-width: 480px) {
+  .create-file-dialog {
+    min-width: auto;
+    width: 100%;
+    padding: 16px;
+    
+    .dialog-actions {
+      flex-direction: column-reverse;
+      gap: 8px;
+      
+      .action-button {
+        width: 100%;
+      }
+    }
+    
+    .preview-info {
+      grid-template-columns: 1fr;
+      gap: 4px;
+      
+      .info-label {
+        font-weight: 600;
+      }
+    }
+  }
+}
+
+/* アクセシビリティ対応 */
+@media (prefers-reduced-motion: reduce) {
+  .create-file-dialog * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ハイコントラストモード */
+@media (prefers-contrast: high) {
+  .create-file-dialog {
+    .mode-select {
+      border-width: 2px;
+    }
+    
+    .validation-messages {
+      .error-item,
+      .warning-item {
+        border-width: 2px;
+      }
+    }
+  }
+}

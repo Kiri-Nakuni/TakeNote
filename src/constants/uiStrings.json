@@ -1,0 +1,246 @@
+{
+  "app": {
+    "name": "TakeNote",
+    "version": "2.0.0",
+    "description": "シンプルで高機能なノートアプリケーション",
+    "author": "Suima",
+    "license": "MIT",
+    "repository": "https://github.com/Kiri-Nakuni/TakeNote"
+  },
+  "cpp": {
+    "execution": {
+      "title": "C++ 実行環境",
+      "buttons": {
+        "run": "実行",
+        "clear": "クリア",
+        "options": "オプション",
+        "bash": "Bash",
+        "sample": "サンプル",
+        "copy": "コピー",
+        "save": "保存"
+      },
+      "labels": {
+        "standardInput": "標準入力 (stdin)",
+        "standardOutput": "標準出力 (stdout)",
+        "errorOutput": "エラー出力 (stderr)",
+        "cppStandard": "C++標準",
+        "optimization": "最適化",
+        "warnings": "警告を有効化 (-Wall)",
+        "debug": "デバッグ情報 (-g)"
+      },
+      "options": {
+        "standards": {
+          "cpp11": "C++11",
+          "cpp14": "C++14",
+          "cpp17": "C++17",
+          "cpp20": "C++20"
+        },
+        "optimization": {
+          "O0": "なし (-O0)",
+          "O1": "レベル1 (-O1)",
+          "O2": "レベル2 (-O2)",
+          "O3": "レベル3 (-O3)"
+        }
+      },
+      "placeholders": {
+        "input": "プログラムに渡す入力データを入力してください...",
+        "output": "プログラムを実行すると出力がここに表示されます"
+      },
+      "status": {
+        "compiling": "コンパイル中...",
+        "executing": "実行中...",
+        "executionTime": "実行時間: {{time}}ms",
+        "memoryUsage": "メモリ使用量: {{memory}}KB",
+        "exitCode": "終了コード: {{code}}",
+        "lines": "{{count}}行",
+        "characters": "{{count}}文字"
+      }
+    }
+  },
+  "dialogs": {
+    "createFile": {
+      "title": "新しいファイルを作成",
+      "labels": {
+        "fileName": "ファイル名",
+        "mode": "モード",
+        "description": "説明 (オプション)"
+      },
+      "placeholders": {
+        "fileName": "ファイル名を入力...",
+        "description": "ファイルの説明..."
+      },
+      "modes": {
+        "note": "📝 Note モード (.md)",
+        "cpp": "💻 C++ モード (.cpp)",
+        "text": "📄 Text モード (.txt)",
+        "markdown": "📋 Markdown モード (.md)"
+      },
+      "buttons": {
+        "create": "作成",
+        "cancel": "キャンセル"
+      },
+      "validation": {
+        "errors": {
+          "emptyFileName": "ファイル名を入力してください",
+          "invalidChars": "ファイル名に使用できない文字が含まれています: < > : \" / \\ | ? *",
+          "tooLong": "ファイル名が長すぎます（255文字以内で入力してください）",
+          "reservedName": "予約されたファイル名です",
+          "invalidMode": "選択されたモードは無効です"
+        },
+        "warnings": {
+          "hasWhitespace": "ファイル名の先頭または末尾に空白が含まれています",
+          "isHidden": "隠しファイルとして作成されます",
+          "hasNonAscii": "ファイル名に日本語文字が含まれています",
+          "longDescription": "説明文が長すぎます（1000文字以内を推奨）"
+        }
+      },
+      "preview": {
+        "title": "ファイルプレビュー",
+        "labels": {
+          "fullName": "フルパス",
+          "size": "サイズ",
+          "type": "タイプ",
+          "lastModified": "最終更新"
+        }
+      }
+    },
+    "common": {
+      "buttons": {
+        "ok": "OK",
+        "cancel": "キャンセル",
+        "yes": "はい",
+        "no": "いいえ",
+        "close": "閉じる",
+        "save": "保存",
+        "discard": "破棄"
+      },
+      "messages": {
+        "confirmUnsavedChanges": "変更が保存されていません。続行しますか？",
+        "operationCancelled": "操作がキャンセルされました",
+        "operationCompleted": "操作が完了しました"
+      }
+    }
+  },
+  "editor": {
+    "buttons": {
+      "syntaxHighlight": {
+        "on": "ハイライト ON",
+        "off": "ハイライト OFF"
+      }
+    },
+    "languages": {
+      "javascript": "JavaScript",
+      "typescript": "TypeScript",
+      "cpp": "C++",
+      "python": "Python",
+      "java": "Java",
+      "markdown": "Markdown",
+      "json": "JSON",
+      "css": "CSS",
+      "html": "HTML"
+    },
+    "placeholders": {
+      "plainText": "テキストを入力してください..."
+    }
+  },
+  "tabs": {
+    "newTab": "新しいファイル",
+    "contextMenu": {
+      "closeOthers": "他のタブを閉じる",
+      "closeAll": "すべて閉じる",
+      "saveAll": "すべて保存"
+    }
+  },
+  "sidebar": {
+    "title": "Take Note",
+    "panels": {
+      "files": "ファイル",
+      "search": "検索",
+      "recent": "最近使用したファイル",
+      "settings": "設定"
+    },
+    "fileTree": {
+      "buttons": {
+        "newFile": "新しいファイル",
+        "newFolder": "新しいフォルダ",
+        "openFolder": "フォルダを開く",
+        "refresh": "更新"
+      },
+      "loading": "読み込み中...",
+      "empty": "ファイルが見つかりません"
+    },
+    "search": {
+      "placeholder": "検索キーワードを入力...",
+      "caseSensitive": "大文字小文字を区別",
+      "wholeWord": "単語全体",
+      "useRegex": "正規表現",
+      "searchButton": "検索",
+      "noResults": "検索結果が見つかりません",
+      "resultsHeader": "検索結果",
+      "linePrefix": "行"
+    }
+  },
+  "modals": {
+    "config": {
+      "title": "設定",
+      "tabs": {
+        "editor": "エディタ",
+        "files": "ファイル",
+        "general": "一般"
+      },
+      "buttons": {
+        "save": "保存",
+        "cancel": "キャンセル",
+        "reset": "リセット"
+      }
+    },
+    "license": {
+      "title": "ライセンス情報",
+      "close": "閉じる",
+      "appDescription": "このソフトウェアは以下のオープンソースライブラリを使用しています。",
+      "labels": {
+        "version": "Version",
+        "licenseType": "ライセンス"
+      }
+    },
+    "about": {
+      "title": "バージョン情報",
+      "appName": "{{app.name}}",
+      "description": "{{app.description}}",
+      "version": "バージョン",
+      "author": "作成者",
+      "license": "ライセンス",
+      "repository": "リポジトリ",
+      "electron": "Electron",
+      "node": "Node.js",
+      "vite": "Vite",
+      "os": "OS",
+      "architecture": "アーキテクチャ",
+      "systemInfo": "システム情報",
+      "buttons": {
+        "close": "閉じる",
+        "viewLicense": "ライセンス詳細"
+      }
+    },
+    "newFile": {
+      "title": "新しいファイル",
+      "fileName": "ファイル名",
+      "description": "説明",
+      "mode": "モード",
+      "create": "作成",
+      "creating": "作成中...",
+      "cancel": "キャンセル"
+    }
+  },
+  "common": {
+    "ok": "OK",
+    "cancel": "キャンセル",
+    "save": "保存",
+    "close": "閉じる",
+    "loading": "読み込み中...",
+    "error": "エラー",
+    "success": "成功",
+    "warning": "警告",
+    "info": "情報"
+  }
+}

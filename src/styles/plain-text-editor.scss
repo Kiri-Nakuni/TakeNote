@@ -1,0 +1,168 @@
+// PlainTextEditor専用のスタイル定義
+
+// 基本レイアウト
+.plain-text-editor-wrapper {
+  display: flex;
+  height: 100%;
+  width: 100%;
+  background-color: var(--bg-color);
+}
+
+// テキストエリア本体
+.plain-text-editor {
+  flex: 1;
+  border: none;
+  outline: none;
+  resize: none;
+  padding: 1em;
+  font-family: var(--font-family-mono, 'Courier New', monospace);
+  font-size: 14px;
+  line-height: 1.5;
+  background: var(--bg-color);
+  color: var(--text-color);
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  overflow: auto;
+  
+  &::placeholder {
+    color: var(--text-muted, #888);
+    opacity: 0.7;
+  }
+  
+  &:focus {
+    background: var(--bg-color-focus, var(--bg-color));
+    color: var(--text-color-focus, var(--text-color));
+  }
+  
+  &:disabled {
+    background: var(--bg-color-disabled, #f5f5f5);
+    color: var(--text-color-disabled, #999);
+    cursor: not-allowed;
+  }
+  
+  &:read-only {
+    background: var(--bg-color-readonly, #fafafa);
+    cursor: default;
+  }
+}
+
+// スクロールバーのカスタマイズ
+.plain-text-editor::-webkit-scrollbar {
+  width: 12px;
+  height: 12px;
+}
+
+.plain-text-editor::-webkit-scrollbar-track {
+  background: var(--scrollbar-track);
+  border-radius: 6px;
+}
+
+.plain-text-editor::-webkit-scrollbar-thumb {
+  background: var(--scrollbar-thumb);
+  border-radius: 6px;
+  
+  &:hover {
+    background: var(--scrollbar-thumb-hover);
+  }
+}
+
+.plain-text-editor::-webkit-scrollbar-corner {
+  background: var(--scrollbar-track);
+}
+
+// レスポンシブ対応
+@media (max-width: 768px) {
+  .plain-text-editor {
+    font-size: 12px;
+    padding: 0.5em;
+  }
+}
+
+@media (max-width: 480px) {
+  .plain-text-editor {
+    font-size: 11px;
+    padding: 0.25em;
+  }
+}
+
+// ダークテーマ対応
+@media (prefers-color-scheme: dark) {
+  .plain-text-editor-wrapper {
+    background-color: var(--bg-color-dark, #1e1e1e);
+  }
+  
+  .plain-text-editor {
+    background: var(--bg-color-dark, #1e1e1e);
+    color: var(--text-color-dark, #ffffff);
+    
+    &::placeholder {
+      color: var(--text-muted-dark, #aaa);
+    }
+    
+    &:focus {
+      background: var(--bg-color-focus-dark, #252525);
+    }
+    
+    &:disabled {
+      background: var(--bg-color-disabled-dark, #2a2a2a);
+      color: var(--text-color-disabled-dark, #666);
+    }
+    
+    &:read-only {
+      background: var(--bg-color-readonly-dark, #252525);
+    }
+  }
+  
+  .plain-text-editor::-webkit-scrollbar-track {
+    background: var(--scrollbar-track);
+  }
+  
+  .plain-text-editor::-webkit-scrollbar-thumb {
+    background: var(--scrollbar-thumb);
+    
+    &:hover {
+      background: var(--scrollbar-thumb-hover);
+    }
+  }
+  
+  .plain-text-editor::-webkit-scrollbar-corner {
+    background: var(--scrollbar-track);
+  }
+}
+
+// アクセシビリティ対応
+@media (prefers-reduced-motion: reduce) {
+  .plain-text-editor {
+    transition: none;
+  }
+}
+
+// 高コントラストモード対応
+@media (prefers-contrast: high) {
+  .plain-text-editor {
+    border: 2px solid var(--border-color-high-contrast, #000000);
+    background: var(--bg-color-high-contrast, #ffffff);
+    color: var(--text-color-high-contrast, #000000);
+    
+    &:focus {
+      border-color: var(--focus-color-high-contrast, #0066cc);
+      outline: 2px solid var(--focus-color-high-contrast, #0066cc);
+      outline-offset: 2px;
+    }
+  }
+}
+
+// プリント時のスタイル
+@media print {
+  .plain-text-editor-wrapper {
+    background: white;
+  }
+  
+  .plain-text-editor {
+    background: white;
+    color: black;
+    border: 1px solid black;
+    overflow: visible;
+    height: auto;
+  }
+}

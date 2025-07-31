@@ -1,0 +1,538 @@
+/* BaseButton.vue専用スタイル */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-family: inherit;
+  font-weight: 500;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-decoration: none;
+  user-select: none;
+  position: relative;
+  overflow: hidden;
+  vertical-align: middle;
+  white-space: nowrap;
+  
+  // フォーカス状態
+  &:focus {
+    outline: 2px solid var(--focus-color, #007acc);
+    outline-offset: 2px;
+  }
+  
+  &:focus:not(:focus-visible) {
+    outline: none;
+  }
+  
+  &:focus-visible {
+    outline: 2px solid var(--focus-color, #007acc);
+    outline-offset: 2px;
+  }
+
+  // 無効状態
+  &--disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    pointer-events: none;
+    
+    &:hover,
+    &:active,
+    &:focus {
+      transform: none !important;
+      box-shadow: none !important;
+    }
+  }
+
+  // ローディング状態
+  &--loading {
+    cursor: wait;
+    pointer-events: none;
+    
+    .button-text {
+      opacity: 0.7;
+    }
+  }
+
+  // フルWidth
+  &--full-width {
+    width: 100%;
+  }
+
+  // アイコンのみ
+  &--icon-only {
+    aspect-ratio: 1;
+    padding: 8px !important;
+    
+    .button-icon {
+      margin: 0;
+    }
+  }
+
+  // 角丸
+  &--rounded {
+    border-radius: 50px;
+  }
+
+  // シャドウ
+  &--shadow {
+    box-shadow: 0 2px 4px var(--shadow-color, rgba(0, 0, 0, 0.1));
+    
+    &:hover:not(.btn--disabled) {
+      box-shadow: 0 4px 8px var(--shadow-color, rgba(0, 0, 0, 0.15));
+    }
+    
+    &:active:not(.btn--disabled) {
+      box-shadow: 0 1px 2px var(--shadow-color, rgba(0, 0, 0, 0.1));
+    }
+  }
+
+  // プレス状態
+  &--pressed {
+    transform: translateY(1px);
+  }
+}
+
+/* サイズバリエーション */
+.btn--small {
+  padding: 6px 12px;
+  font-size: 12px;
+  min-height: 28px;
+  gap: 4px;
+  
+  &.btn--icon-only {
+    padding: 6px;
+    width: 28px;
+    min-height: 28px;
+  }
+  
+  .button-icon {
+    font-size: 14px;
+  }
+}
+
+.btn--medium {
+  padding: 8px 16px;
+  font-size: 14px;
+  min-height: 36px;
+  gap: 6px;
+  
+  &.btn--icon-only {
+    padding: 8px;
+    width: 36px;
+    min-height: 36px;
+  }
+  
+  .button-icon {
+    font-size: 16px;
+  }
+}
+
+.btn--large {
+  padding: 12px 24px;
+  font-size: 16px;
+  min-height: 44px;
+  gap: 8px;
+  
+  &.btn--icon-only {
+    padding: 12px;
+    width: 44px;
+    min-height: 44px;
+  }
+  
+  .button-icon {
+    font-size: 18px;
+  }
+}
+
+.btn--xlarge {
+  padding: 16px 32px;
+  font-size: 18px;
+  min-height: 52px;
+  gap: 10px;
+  
+  &.btn--icon-only {
+    padding: 16px;
+    width: 52px;
+    min-height: 52px;
+  }
+  
+  .button-icon {
+    font-size: 20px;
+  }
+}
+
+/* バリアント */
+
+// Primary
+.btn--primary {
+  background: var(--primary-color, #007acc);
+  color: var(--primary-text, #ffffff);
+  border-color: var(--primary-color, #007acc);
+
+  &:hover:not(.btn--disabled) {
+    background: var(--primary-hover, #0066b3);
+    border-color: var(--primary-hover, #0066b3);
+    transform: translateY(-1px);
+  }
+
+  &:active:not(.btn--disabled) {
+    background: var(--primary-active, #005299);
+    border-color: var(--primary-active, #005299);
+    transform: translateY(0);
+  }
+}
+
+// Secondary
+.btn--secondary {
+  background: var(--bg-secondary, #f8f9fa);
+  color: var(--text-color, #333);
+  border-color: var(--border-color, #dee2e6);
+
+  &:hover:not(.btn--disabled) {
+    background: var(--hover-bg, #e9ecef);
+    border-color: var(--border-hover, #adb5bd);
+    transform: translateY(-1px);
+  }
+
+  &:active:not(.btn--disabled) {
+    background: var(--active-bg, #dee2e6);
+    border-color: var(--border-active, #6c757d);
+    transform: translateY(0);
+  }
+}
+
+// Danger
+.btn--danger {
+  background: var(--danger-color, #dc3545);
+  color: var(--danger-text, #ffffff);
+  border-color: var(--danger-color, #dc3545);
+
+  &:hover:not(.btn--disabled) {
+    background: var(--danger-hover, #c82333);
+    border-color: var(--danger-hover, #c82333);
+    transform: translateY(-1px);
+  }
+
+  &:active:not(.btn--disabled) {
+    background: var(--danger-active, #bd2130);
+    border-color: var(--danger-active, #bd2130);
+    transform: translateY(0);
+  }
+}
+
+// Success
+.btn--success {
+  background: var(--success-color, #28a745);
+  color: var(--success-text, #ffffff);
+  border-color: var(--success-color, #28a745);
+
+  &:hover:not(.btn--disabled) {
+    background: var(--success-hover, #218838);
+    border-color: var(--success-hover, #218838);
+    transform: translateY(-1px);
+  }
+
+  &:active:not(.btn--disabled) {
+    background: var(--success-active, #1e7e34);
+    border-color: var(--success-active, #1e7e34);
+    transform: translateY(0);
+  }
+}
+
+// Warning
+.btn--warning {
+  background: var(--warning-color, #ffc107);
+  color: var(--warning-text, #212529);
+  border-color: var(--warning-color, #ffc107);
+
+  &:hover:not(.btn--disabled) {
+    background: var(--warning-hover, #e0a800);
+    border-color: var(--warning-hover, #e0a800);
+    transform: translateY(-1px);
+  }
+
+  &:active:not(.btn--disabled) {
+    background: var(--warning-active, #d39e00);
+    border-color: var(--warning-active, #d39e00);
+    transform: translateY(0);
+  }
+}
+
+// Info
+.btn--info {
+  background: var(--info-color, #17a2b8);
+  color: var(--info-text, #ffffff);
+  border-color: var(--info-color, #17a2b8);
+
+  &:hover:not(.btn--disabled) {
+    background: var(--info-hover, #138496);
+    border-color: var(--info-hover, #138496);
+    transform: translateY(-1px);
+  }
+
+  &:active:not(.btn--disabled) {
+    background: var(--info-active, #117a8b);
+    border-color: var(--info-active, #117a8b);
+    transform: translateY(0);
+  }
+}
+
+// Ghost
+.btn--ghost {
+  background: transparent;
+  color: var(--text-color, #333);
+  border-color: transparent;
+
+  &:hover:not(.btn--disabled) {
+    background: var(--hover-bg, rgba(0, 0, 0, 0.05));
+    transform: translateY(-1px);
+  }
+
+  &:active:not(.btn--disabled) {
+    background: var(--active-bg, rgba(0, 0, 0, 0.1));
+    transform: translateY(0);
+  }
+}
+
+// Outline
+.btn--outline {
+  background: transparent;
+  color: var(--primary-color, #007acc);
+  border-color: var(--primary-color, #007acc);
+
+  &:hover:not(.btn--disabled) {
+    background: var(--primary-color, #007acc);
+    color: var(--primary-text, #ffffff);
+    transform: translateY(-1px);
+  }
+
+  &:active:not(.btn--disabled) {
+    background: var(--primary-active, #005299);
+    border-color: var(--primary-active, #005299);
+    color: var(--primary-text, #ffffff);
+    transform: translateY(0);
+  }
+}
+
+/* コンポーネント要素 */
+.button-icon {
+  font-size: 1em;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.button-text {
+  line-height: 1.2;
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.button-loading {
+  font-size: 0.9em;
+  animation: spin 1s linear infinite;
+  flex-shrink: 0;
+}
+
+/* リップル効果 */
+.btn-ripple {
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.3);
+  pointer-events: none;
+  animation: ripple 0.6s linear;
+  transform: scale(0);
+}
+
+/* ダークテーマ対応 */
+[data-theme="dark"] {
+  .btn--secondary {
+    background: var(--dark-bg-secondary, #374151);
+    color: var(--dark-text-color, #f3f4f6);
+    border-color: var(--dark-border-color, #4b5563);
+
+    &:hover:not(.btn--disabled) {
+      background: var(--dark-hover-bg, #4b5563);
+      border-color: var(--dark-border-hover, #6b7280);
+    }
+
+    &:active:not(.btn--disabled) {
+      background: var(--dark-active-bg, #374151);
+      border-color: var(--dark-border-active, #9ca3af);
+    }
+  }
+
+  .btn--ghost {
+    color: var(--dark-text-color, #f3f4f6);
+
+    &:hover:not(.btn--disabled) {
+      background: var(--dark-hover-bg, rgba(255, 255, 255, 0.05));
+    }
+
+    &:active:not(.btn--disabled) {
+      background: var(--dark-active-bg, rgba(255, 255, 255, 0.1));
+    }
+  }
+
+  .btn--outline {
+    color: var(--dark-primary-color, #60a5fa);
+    border-color: var(--dark-primary-color, #60a5fa);
+
+    &:hover:not(.btn--disabled) {
+      background: var(--dark-primary-color, #60a5fa);
+      color: var(--dark-primary-text, #1f2937);
+    }
+  }
+}
+
+/* アニメーション */
+@keyframes spin {
+  from { 
+    transform: rotate(0deg); 
+  }
+  to { 
+    transform: rotate(360deg); 
+  }
+}
+
+@keyframes ripple {
+  to {
+    transform: scale(4);
+    opacity: 0;
+  }
+}
+
+@keyframes buttonPress {
+  0% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(1px);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+
+/* レスポンシブデザイン */
+@media (max-width: 768px) {
+  .btn {
+    min-height: 44px; // タッチターゲットサイズ確保
+    
+    &--small {
+      min-height: 36px;
+      padding: 8px 12px;
+    }
+    
+    &--medium {
+      min-height: 44px;
+      padding: 12px 16px;
+    }
+    
+    &--large {
+      min-height: 48px;
+      padding: 14px 24px;
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .btn--full-width {
+    width: 100%;
+    margin-bottom: 8px;
+    
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+}
+
+/* ハイコントラストモード対応 */
+@media (prefers-contrast: high) {
+  .btn {
+    border-width: 2px;
+    font-weight: 600;
+    
+    &:focus {
+      outline-width: 3px;
+    }
+  }
+  
+  .btn--ghost {
+    border: 2px solid currentColor;
+  }
+}
+
+/* モーション削減対応 */
+@media (prefers-reduced-motion: reduce) {
+  .btn,
+  .button-loading,
+  .btn-ripple {
+    animation: none !important;
+    transition: none !important;
+  }
+  
+  .btn:hover,
+  .btn:active {
+    transform: none !important;
+  }
+}
+
+/* プリント時の調整 */
+@media print {
+  .btn {
+    background: white !important;
+    color: black !important;
+    border: 1px solid black !important;
+    box-shadow: none !important;
+    
+    &::after {
+      content: " [ボタン]";
+      font-size: 0.8em;
+      font-weight: normal;
+    }
+  }
+  
+  .button-loading {
+    display: none;
+  }
+}
+
+/* アクセシビリティの向上 */
+.btn[aria-pressed="true"] {
+  background: var(--pressed-bg, #005299);
+  color: var(--pressed-text, #ffffff);
+}
+
+.btn[aria-busy="true"] {
+  cursor: wait;
+  
+  .button-text {
+    opacity: 0.7;
+  }
+}
+
+/* 特殊な状態 */
+.btn--pulsing {
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0 var(--primary-color, #007acc);
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba(0, 122, 204, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(0, 122, 204, 0);
+  }
+}

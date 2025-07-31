@@ -1,0 +1,92 @@
+appId: com.arimu.takenote
+productName: TakeNote
+directories:
+  buildResources: build
+files:
+  - '!**/.vscode/*'
+  - '!src/*'
+  - '!electron.vite.config.{js,ts,mjs,cjs}'
+  - '!{.eslintcache,eslint.config.mjs,CHANGELOG.md,README.md}'
+  - '!{.env,.env.*,pnpm-lock.yaml}'
+  - '!{tsconfig.json,tsconfig.node.json,tsconfig.web.json}'
+asarUnpack:
+  - resources/**
+
+# Windows向け設定
+win:
+  target:
+    - target: nsis
+      arch:
+        - x64
+  executableName: takenote
+  icon: build/icon.ico
+  certificateFile: null
+  sign: null
+  signDlls: false
+
+# Windows NSIS インストーラー設定
+nsis:
+  artifactName: ${name}-${version}-setup.${ext}
+  shortcutName: ${productName}
+  uninstallDisplayName: ${productName}
+  createDesktopShortcut: always
+  createStartMenuShortcut: true
+  oneClick: false
+  allowToChangeInstallationDirectory: true
+
+# macOS向け設定（将来の拡張用）
+mac:
+  target:
+    - target: dmg
+      arch:
+        - x64
+        - arm64
+  entitlementsInherit: build/entitlements.mac.plist
+  extendInfo:
+    - NSCameraUsageDescription: Application requests access to the device's camera.
+    - NSMicrophoneUsageDescription: Application requests access to the device's microphone.
+    - NSDocumentsFolderUsageDescription: Application requests access to the user's Documents folder.
+    - NSDownloadsFolderUsageDescription: Application requests access to the user's Downloads folder.
+  notarize: false
+  icon: build/icon.icns
+
+# macOS DMG設定
+dmg:
+  artifactName: ${name}-${version}.${ext}
+
+# Linux向け設定
+linux:
+  target:
+    - target: AppImage
+      arch:
+        - x64
+    - target: deb
+      arch:
+        - x64
+    - target: rpm
+      arch:
+        - x64
+  maintainer: electronjs.org
+  category: Utility
+  icon: build/icon.png
+  # Linux固有の描画問題対策
+  executableArgs:
+    - "--no-sandbox"
+    - "--disable-gpu-sandbox"
+    - "--disable-dev-shm-usage"
+  synopsis: "Advanced note-taking application with C++ support"
+  description: "TakeNote is a powerful note-taking application that supports markdown, C++ code execution, and more."
+
+# AppImage設定
+appImage:
+  artifactName: ${name}-${version}.${ext}
+
+npmRebuild: false
+
+# 公開設定（無効化）
+# publish:
+#   provider: generic
+#   url: https://example.com/auto-updates
+
+electronDownload:
+  mirror: https://npmmirror.com/mirrors/electron/

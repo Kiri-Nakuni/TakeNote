@@ -1,47 +1,37 @@
-import js from '@eslint/js';
-import tseslint from 'typescript-eslint';
-import globals from 'globals';
-import { dirname, resolve } from 'node:path';  
-const __dirname = import.meta.dirname;
-const __filename = import.meta.filename;
+import tseslint from '@electron-toolkit/eslint-config-ts'
+import eslintPluginVue from 'eslint-plugin-vue'
+import vueParser from 'vue-eslint-parser'
 
 export default tseslint.config(
+  { ignores: ['**/node_modules', '**/dist', '**/out'] },
+  tseslint.configs.recommended,
+  eslintPluginVue.configs['flat/recommended'],
   {
+    files: ['**/*.vue'],
     languageOptions: {
+      parser: vueParser,
       parserOptions: {
-        project: [resolve(__dirname, 'tsconfig.json')],
-        tsconfigRootDir: __dirname,
-        ecmaVersion: 'latest',
-        sourceType: 'module'
-      },
-      globals: {
-        ...globals.browser,
-        ...globals.es2021,
-        ...globals.node
+        ecmaFeatures: {
+          jsx: true
+        },
+        extraFileExtensions: ['.vue'],
+        parser: tseslint.parser
       }
-    },
-    ignores: [
-      './dist/',
-      './dist-electron/',
-      './node_modules/',
-      '**/*.js',
-      '**/*.cjs',
-      '**/*.mjs'
-    ]
-  },
-
-  js.configs.recommended,
-  ...tseslint.configs.recommendedTypeChecked,
-
-  {
-    rules: {
-      // 例:
-      // '@typescript-eslint/no-unused-vars': 'warn',
     }
   },
   {
-    files: ['eslint.config.*'],
-    languageOptions: { parser: null },
-    rules: { '@typescript-eslint/await-thenable': 'off' }
-  },
-);
+    files: ['**/*.{ts,mts,tsx,vue}'],
+    rules: {
+      'vue/require-default-prop': 'off',
+      'vue/multi-word-component-names': 'off',
+      'vue/block-lang': [
+        'error',
+        {
+          script: {
+            lang: 'ts'
+          }
+        }
+      ]
+    }
+  }
+)

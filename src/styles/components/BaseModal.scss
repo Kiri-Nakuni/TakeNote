@@ -1,0 +1,449 @@
+/* BaseModal.vue専用スタイル */
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: var(--modal-overlay, rgba(0, 0, 0, 0.5));
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  backdrop-filter: blur(2px);
+  animation: fadeIn 0.3s ease-out;
+  
+  // タッチデバイス対応
+  touch-action: none;
+  -webkit-overflow-scrolling: touch;
+}
+
+.modal {
+  background: var(--modal-bg, #ffffff);
+  border-radius: 8px;
+  box-shadow: 
+    0 4px 20px var(--shadow, rgba(0, 0, 0, 0.15)),
+    0 0 0 1px var(--border-color, #e0e0e0);
+  max-width: 90vw;
+  max-height: 90vh;
+  width: 600px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  animation: slideIn 0.3s ease-out;
+  transform-origin: center;
+  
+  &.small {
+    width: 400px;
+  }
+  
+  &.medium {
+    width: 600px;
+  }
+  
+  &.large {
+    width: 800px;
+    height: 80vh;
+  }
+  
+  &.fullscreen {
+    width: 95vw;
+    height: 95vh;
+    max-width: none;
+    max-height: none;
+  }
+  
+  // 特定用途のスタイル
+  &.config-modal {
+    width: 800px;
+    min-height: 600px;
+  }
+  
+  &.tan-modal {
+    width: 700px;
+    min-height: 500px;
+  }
+  
+  &.file-dialog {
+    width: 500px;
+  }
+  
+  &.confirm-dialog {
+    width: 450px;
+    max-height: 300px;
+  }
+  
+  &.error-dialog {
+    width: 500px;
+    
+    .modal-header {
+      background: var(--error-bg, #fef2f2);
+      border-bottom-color: var(--error-border, #fecaca);
+      
+      h2 {
+        color: var(--error-color, #dc2626);
+      }
+    }
+  }
+  
+  &.warning-dialog {
+    width: 500px;
+    
+    .modal-header {
+      background: var(--warning-bg, #fffbeb);
+      border-bottom-color: var(--warning-border, #fed7aa);
+      
+      h2 {
+        color: var(--warning-color, #d97706);
+      }
+    }
+  }
+  
+  &.info-dialog {
+    width: 500px;
+    
+    .modal-header {
+      background: var(--info-bg, #eff6ff);
+      border-bottom-color: var(--info-border, #bfdbfe);
+      
+      h2 {
+        color: var(--info-color, #2563eb);
+      }
+    }
+  }
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 24px;
+  border-bottom: 1px solid var(--border-color, #e9ecef);
+  background: var(--header-bg, #f8f9fa);
+  flex-shrink: 0;
+  
+  h2 {
+    margin: 0;
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--text-color, #333);
+    line-height: 1.2;
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}
+
+.close-button {
+  background: none;
+  border: none;
+  font-size: 24px;
+  color: var(--text-muted, #666);
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 4px;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+  margin-left: 12px;
+  
+  &:hover {
+    background: var(--hover-bg, #f0f0f0);
+    color: var(--text-color, #333);
+    transform: scale(1.1);
+  }
+  
+  &:active {
+    background: var(--active-bg, #e0e0e0);
+    transform: scale(0.95);
+  }
+  
+  &:focus {
+    outline: 2px solid var(--focus-color, #0066cc);
+    outline-offset: 2px;
+  }
+}
+
+.modal-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 24px;
+  background: var(--bg-color, #ffffff);
+  color: var(--text-color, #333);
+  
+  // スクロールバーのスタイル
+  &::-webkit-scrollbar {
+    width: 8px;
+  }
+  
+  &::-webkit-scrollbar-track {
+    background: var(--scrollbar-track, #f1f1f1);
+    border-radius: 4px;
+  }
+  
+  &::-webkit-scrollbar-thumb {
+    background: var(--scrollbar-thumb, #c1c1c1);
+    border-radius: 4px;
+    
+    &:hover {
+      background: var(--scrollbar-thumb-hover, #a1a1a1);
+    }
+  }
+  
+  // IME問題対策のための入力フィールドスタイル
+  input,
+  textarea,
+  select {
+    ime-mode: auto;
+    background: var(--input-bg, #ffffff);
+    color: var(--text-color, #333);
+    border-color: var(--border-color, #ddd);
+    
+    &::placeholder {
+      color: var(--text-muted, #999);
+    }
+    
+    &:focus {
+      ime-mode: active;
+      border-color: var(--focus-color, #0066cc);
+      box-shadow: 0 0 0 2px var(--primary-alpha, rgba(0, 102, 204, 0.2));
+    }
+  }
+}
+
+.modal-footer {
+  padding: 16px 24px;
+  border-top: 1px solid var(--border-color, #e9ecef);
+  background: var(--footer-bg, #f8f9fa);
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  flex-shrink: 0;
+  
+  .footer-button {
+    min-width: 80px;
+  }
+}
+
+/* ダークテーマ対応 */
+[data-theme="dark"] {
+  .modal-overlay {
+    background: var(--dark-modal-overlay, rgba(0, 0, 0, 0.7));
+  }
+  
+  .modal {
+    background: var(--dark-modal-bg, #2d3748);
+    box-shadow: 
+      0 4px 20px var(--dark-shadow, rgba(0, 0, 0, 0.3)),
+      0 0 0 1px var(--dark-border-color, #4a5568);
+  }
+  
+  .modal-header {
+    background: var(--dark-header-bg, #1a202c);
+    border-bottom-color: var(--dark-border-color, #4a5568);
+    
+    h2 {
+      color: var(--dark-text-color, #e2e8f0);
+    }
+  }
+  
+  .close-button {
+    color: var(--dark-text-muted, #a0aec0);
+    
+    &:hover {
+      background: var(--dark-hover-bg, #4a5568);
+      color: var(--dark-text-color, #e2e8f0);
+    }
+    
+    &:active {
+      background: var(--dark-active-bg, #2d3748);
+    }
+  }
+  
+  .modal-content {
+    background: var(--dark-bg-color, #2d3748);
+    color: var(--dark-text-color, #e2e8f0);
+    
+    &::-webkit-scrollbar-track {
+      background: var(--dark-scrollbar-track, #1a202c);
+    }
+    
+    &::-webkit-scrollbar-thumb {
+      background: var(--dark-scrollbar-thumb, #4a5568);
+      
+      &:hover {
+        background: var(--dark-scrollbar-thumb-hover, #718096);
+      }
+    }
+    
+    input,
+    textarea,
+    select {
+      background: var(--dark-input-bg, #1a202c);
+      color: var(--dark-text-color, #e2e8f0);
+      border-color: var(--dark-border-color, #4a5568);
+      
+      &::placeholder {
+        color: var(--dark-text-muted, #a0aec0);
+      }
+      
+      &:focus {
+        border-color: var(--dark-focus-color, #63b3ed);
+        box-shadow: 0 0 0 2px var(--dark-primary-alpha, rgba(99, 179, 237, 0.2));
+      }
+    }
+  }
+  
+  .modal-footer {
+    background: var(--dark-footer-bg, #1a202c);
+    border-top-color: var(--dark-border-color, #4a5568);
+  }
+}
+
+/* アニメーション */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9) translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+@keyframes slideOut {
+  from {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: scale(0.9) translateY(-20px);
+  }
+}
+
+/* レスポンシブデザイン */
+@media (max-width: 768px) {
+  .modal {
+    width: 95vw !important;
+    max-height: 95vh;
+    margin: 10px;
+    border-radius: 8px;
+    
+    &.fullscreen {
+      width: 100vw !important;
+      height: 100vh !important;
+      max-width: none !important;
+      max-height: none !important;
+      border-radius: 0;
+      margin: 0;
+    }
+  }
+  
+  .modal-header {
+    padding: 16px 20px;
+    
+    h2 {
+      font-size: 18px;
+    }
+  }
+  
+  .modal-content {
+    padding: 20px;
+  }
+  
+  .modal-footer {
+    padding: 12px 20px;
+    flex-direction: column-reverse;
+    gap: 8px;
+    
+    .footer-button {
+      width: 100%;
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .modal {
+    width: 100vw !important;
+    height: 100vh !important;
+    max-width: none !important;
+    max-height: none !important;
+    border-radius: 0;
+    margin: 0;
+  }
+  
+  .modal-header {
+    padding: 12px 16px;
+  }
+  
+  .modal-content {
+    padding: 16px;
+  }
+  
+  .modal-footer {
+    padding: 12px 16px;
+  }
+}
+
+/* ハイコントラストモード対応 */
+@media (prefers-contrast: high) {
+  .modal {
+    border-width: 2px;
+    border-style: solid;
+  }
+  
+  .close-button {
+    border: 2px solid transparent;
+    
+    &:focus {
+      border-color: currentColor;
+    }
+  }
+}
+
+/* モーション削減対応 */
+@media (prefers-reduced-motion: reduce) {
+  .modal-overlay,
+  .modal,
+  .close-button {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+/* プリント時の対応 */
+@media print {
+  .modal-overlay {
+    position: static !important;
+    background: none !important;
+    backdrop-filter: none !important;
+  }
+  
+  .modal {
+    box-shadow: none !important;
+    border: 1px solid #000 !important;
+    max-width: none !important;
+    max-height: none !important;
+  }
+  
+  .close-button {
+    display: none !important;
+  }
+}
