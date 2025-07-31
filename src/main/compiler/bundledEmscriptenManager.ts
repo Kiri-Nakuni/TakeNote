@@ -137,15 +137,7 @@ export class BundledEmscriptenManager {
       throw new Error('Bundled Emscripten is not available');
     }
     
-    const emsdkPath = path.join(this.resourcesPath, 'emsdk');
-    const emscriptenPath = path.join(emsdkPath, 'upstream', 'emscripten');
-    
-    const platform = this.getPlatformName();
-    if (platform === 'win32') {
-      return path.join(emscriptenPath, 'emcc.bat');
-    } else {
-      return path.join(emscriptenPath, 'emcc');
-    }
+    return this.bundledEmscripten!.emccPath;
   }
 
   /**
@@ -194,13 +186,28 @@ export class BundledEmscriptenManager {
       return {};
     }
 
-    const emsdkPath = path.join(this.resourcesPath, 'emsdk');
-    const emscriptenPath = path.join(emsdkPath, 'upstream', 'emscripten');
-    const nodePath = path.join(emsdkPath, 'node', '22.16.0_64bit', 'bin');
-    const pythonPath = path.join(emsdkPath, 'python', '3.13.3_64bit');
-    
     const platform = this.getPlatformName();
     const separator = platform === 'win32' ? ';' : ':';
+    
+    // プラットフォーム固有のパスか、emsdkパスかを判定
+    const emsdkPath = path.join(this.resourcesPath, 'emsdk');
+    const platformPath = path.join(this.resourcesPath, platform);
+    
+    let emscriptenPath: string;
+    let nodePath: string;
+    let pythonPath: string;
+    
+    // emsdkディレクトリが存在する場合はそちらを使用（完全版）
+    if (fs.existsSync(emsdkPath)) {
+      emscriptenPath = path.join(emsdkPath, 'upstream', 'emscripten');
+      nodePath = path.join(emsdkPath, 'node', '22.16.0_64bit', 'bin');
+      pythonPath = path.join(emsdkPath, 'python', '3.13.3_64bit');
+    } else {
+      // プラットフォーム固有ディレクトリを使用
+      emscriptenPath = platformPath;
+      nodePath = platformPath;
+      pythonPath = platformPath;
+    }
     
     const newPath = [
       emscriptenPath,
@@ -208,12 +215,18 @@ export class BundledEmscriptenManager {
       process.env.PATH || ''
     ].join(separator);
     
-    return {
-      EMSDK: emsdkPath,
-      PATH: newPath,
-      EMSDK_NODE: path.join(nodePath, platform === 'win32' ? 'node.exe' : 'node'),
-      EMSDK_PYTHON: path.join(pythonPath, platform === 'win32' ? 'python.exe' : 'python')
+    const env: NodeJS.ProcessEnv = {
+      PATH: newPath
     };
+    
+    // emsdkディレクトリがある場合は完全な環境変数を設定
+    if (fs.existsSync(emsdkPath)) {
+      env.EMSDK = emsdkPath;
+      env.EMSDK_NODE = path.join(nodePath, platform === 'win32' ? 'node.exe' : 'node');
+      env.EMSDK_PYTHON = path.join(pythonPath, platform === 'win32' ? 'python.exe' : 'python');
+    }
+    
+    return env;
   }
 
   /**
