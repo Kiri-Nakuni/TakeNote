@@ -284,21 +284,6 @@ onMounted(() => {
   text-align: center;
 }
 
-.markdown-content :deep(span[data-x-scale])::after {
-  content: attr(data-x-scale) "×" attr(data-y-scale);
-  position: absolute;
-  top: -20px;
-  left: 0;
-  font-size: 10px;
-  color: #666;
-  background: rgba(255, 255, 255, 0.9);
-  padding: 2px 4px;
-  border-radius: 2px;
-  border: 1px solid #ddd;
-  z-index: 1000;
-  pointer-events: none;
-}
-
 /* アクティブ回転アニメーション */
 .markdown-content :deep(.active-rotate) {
   display: inline-block !important;

@@ -1,6 +1,5 @@
 <template>
   <div class="app">
-    <!-- ネイティブメニューバーを使用するため、カスタムメニューバーは削除 -->
     
     <div class="main-content">
       <!-- サイドバーエリア -->

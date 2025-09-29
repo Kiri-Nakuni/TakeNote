@@ -1,4 +1,4 @@
-import { calculateLayoutAdjustments, calculateRotatedLayoutAdjustments, calculateTextWidth } from './katexFontMetrics';
+import { calculateLayoutAdjustments, calculateRotatedLayoutAdjustments, calculateTextWidth } from './katexFontMetricsF';
 
 /** 処理対象となるdata-*属性のリスト */
 const DYNAMIC_ATTRIBUTES = ['data-xscale', 'data-yscale', 'data-deg', 'data-angularvelocity', 'data-collisionaware', 'data-originalwidth', 'data-scaledwidth'];
@@ -25,6 +25,7 @@ function calculateAndApplyRotationLineBreak(element: HTMLElement, angularVelocit
   // 90度回転時の当たり判定を考慮したレイアウト調整
   const adjustments = calculateRotatedLayoutAdjustments(
     textContent,
+    "Main-Regular", // デフォルトフォント
     1, // スケールは1（activerotateはスケールしない）
     1,
     parentWidth,
@@ -33,7 +34,7 @@ function calculateAndApplyRotationLineBreak(element: HTMLElement, angularVelocit
   );
   
   // 文字の横幅で改行幅を強制的にオーバーライド
-  const textWidthEm = calculateTextWidth(textContent);
+  const textWidthEm = calculateTextWidth(textContent, "Main-Regular");
   const textWidthPx = textWidthEm * baseFontSize;
   
   // 回転時に占める領域が親幅を超える場合の処理
@@ -55,18 +56,6 @@ function calculateAndApplyRotationLineBreak(element: HTMLElement, angularVelocit
     element.style.marginTop = `${adjustments.marginTop}px`;
     element.style.marginBottom = `${adjustments.marginBottom}px`;
   }
-  
-  // デバッグ機能は無効化されています
-  /*
-  console.log('Collision-aware activerotate adjustment:', {
-    text: textContent,
-    angularVelocity,
-    textWidthPx,
-    parentWidth,
-    forceBlock: textWidthPx > parentWidth * 0.8,
-    adjustments
-  });
-  */
   
   // デバッグ用data属性
   element.setAttribute('data-collision-aware', 'true');
@@ -95,23 +84,12 @@ function calculateAndApplyLineBreakWidth(element: HTMLElement, xScale: number, y
   // KaTeXフォントメトリクスを使用してレイアウト調整を計算
   const adjustments = calculateLayoutAdjustments(
     textContent,
+    "Main-Regular", // デフォルトフォント
     xScale,
     yScale,
     parentWidth,
     baseFontSize
   );
-  
-  // デバッグ機能は無効化されています
-  /*
-  console.log('Font metrics calculation for scalebox:', {
-    text: textContent,
-    xScale,
-    yScale,
-    parentWidth,
-    baseFontSize,
-    adjustments
-  });
-  */
   
   // 計算結果に基づいてスタイルを適用
   element.style.display = 'inline-block';
@@ -149,31 +127,6 @@ function calculateAndApplyLineBreakWidth(element: HTMLElement, xScale: number, y
  * @param previewElement - スタイルを適用する要素が含まれる親コンテナ。
  */
 export function processDynamicHtml(previewElement: HTMLElement): void {
-  // デバッグ機能は無効化されています
-  /*
-  const allSpans = previewElement.querySelectorAll('span');
-  console.log('All span elements found:', Array.from(allSpans).map(span => ({
-    element: span,
-    classes: Array.from(span.classList),
-    datasets: { ...span.dataset },
-    textContent: span.textContent,
-    innerHTML: span.innerHTML
-  })));
-  
-  const debugActiverotateStarElements = previewElement.querySelectorAll('.activerotate-star');
-  console.log('Activerotate-star elements found:', debugActiverotateStarElements.length, Array.from(debugActiverotateStarElements));
-
-  const nestedActiverotateElements = previewElement.querySelectorAll('.active-rotate .activerotate-star');
-  console.log('Nested activerotate elements found:', nestedActiverotateElements.length, Array.from(nestedActiverotateElements));
-
-  const collisionAwareElements = previewElement.querySelectorAll('[data-collisionaware="true"]');
-  console.log('Collision-aware elements found:', collisionAwareElements.length, Array.from(collisionAwareElements));
-
-  const angularVelocityElements = previewElement.querySelectorAll('[data-angularvelocity]');
-  console.log('Angular velocity elements found:', angularVelocityElements.length, Array.from(angularVelocityElements));
-  */
-
-  // `data-*`属性を持つ可能性のあるすべてのspan要素を取得します。
   const dynamicElements: NodeListOf<HTMLElement> = previewElement.querySelectorAll(DYNAMIC_ELEMENT_SELECTOR);
 
   dynamicElements.forEach(el => {
@@ -215,18 +168,6 @@ export function processDynamicHtml(previewElement: HTMLElement): void {
       // activerotateの場合：通常の変形は適用せず、CSS アニメーションのみ
       const angularVelocity = parseFloat(el.dataset.angularvelocity);
       
-      // デバッグ機能は無効化されています
-      /*
-      console.log('ActiveRotate debug:', {
-        element: el,
-        angularVelocity: el.dataset.angularvelocity,
-        collisionaware: el.dataset.collisionaware,
-        allDatasets: el.dataset,
-        innerHTML: el.innerHTML,
-        textContent: el.textContent
-      });
-      */
-      
       if (!isNaN(angularVelocity) && angularVelocity !== 0) {
         // 絶対値を使用してアニメーション時間を計算
         const absVelocity = Math.abs(angularVelocity);
@@ -267,15 +208,6 @@ export function processDynamicHtml(previewElement: HTMLElement): void {
     if (parentActiveRotate && parentActiveRotate.dataset.angularvelocity) {
       const angularVelocity = parseFloat(parentActiveRotate.dataset.angularvelocity);
       if (!isNaN(angularVelocity) && angularVelocity !== 0) {
-        // デバッグ機能は無効化されています
-        /*
-        console.log('Processing nested activerotate-star:', {
-          starElement: starEl,
-          parentElement: parentActiveRotate,
-          angularVelocity
-        });
-        */
-        
         // collision-aware処理を適用
         calculateAndApplyRotationLineBreak(starEl, angularVelocity);
       }
